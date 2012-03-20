@@ -1,0 +1,46 @@
+###############################################################################
+# << FILE MANAGED BY PUPPET >>
+# Manual changes are likey to be overwritten
+###############################################################################
+
+uri  <%= uri %>
+base <%= base %>
+
+ldap_version   3
+timelimit      30
+bind_timelimit 30
+idle_timelimit 3600
+bind_policy    soft
+deref          never
+
+<% if nsswitch == true then %>
+# DNs in groups
+#nss_schema         rfc2307bis
+#nss_map_attribute  uniquemember member
+#nss_map_attribute memberuid    member
+#nss_getgrent_skipmembers yes
+
+nss_base_passwd <%= nss_passwd %>,<%= base %>?sub
+nss_base_shadow <%= nss_shadow %>,<%= base %>?sub
+nss_base_group  <%= nss_group  %>,<%= base %>?one
+nss_initgroups_ignoreusers root daemon bin sys sync games man lp mail news uucp proxy www-data backup list irc gnats nobody libuuid statd sshd puppet
+<% end %>
+
+<% if pam == true then %>
+pam_login_attribute  <%= pam_att_login %>
+pam_member_attribute <%= pam_att_member %>
+pam_password         <%= pam_passwd %>
+pam_filter           <%= pam_filter %>
+<% end %>
+
+<% if has_variable?("ssl") and $ssl == true -%>
+ssl start_tls
+ssl on
+tls_cacertfile /etc/ssl/certs/ldap.pem
+<% else -%>
+#ssl start_tls
+#ssl on
+#TLS_CACERTFILE /etc/ssl/certs/ldap.pem
+<% end -%>
+
+
