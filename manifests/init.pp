@@ -67,26 +67,79 @@
 #
 
 class ldap($uri, $base,
-	$version  = '3',
-	$ensure   = 'present',
-	$ssl      = false,
-	$ssl_cert = false,
+	$version        = '3',
+	$timelimit      = 30,
+	$bind_timelimit = 30,
+	$idle_timelimit = 60,
+	$ssl            = false,
+	$ssl_cert       = false,
 	
-	# nsswitch options (requires nsswitch module) - disabled by default
 	$nsswitch   = false,
 	$nss_passwd = false,
 	$nss_group  = false,
 	$nss_shadow = false,
 	
-	# pam options (requires pam module) - disabled by default
 	$pam            = false,
 	$pam_att_login  = 'uid',
 	$pam_att_member = 'member',
 	$pam_passwd     = 'md5',
-	$pam_filter     = 'objectClass=posixAccount') {
+	$pam_filter     = 'objectClass=posixAccount',
+	
+	$ensure = present) {
 
 	include ldap::params
-	include ldap::install
-	include ldap::config
+
+	package { $ldap::params::package:
+		ensure => $ensure,
+	}
+
+	File {
+		ensure  => $ensure,
+		mode    => 0644,
+		owner   => $ldap::params::owner,
+		group   => $ldap::params::group,
+	}
+
+	file { "${ldap::params::prefix}/${ldap::params::config}":
+		content => template("ldap/${ldap::params::config}.erb"),
+	}
+	
+	case $operatingsystem {
+
+		Debian:  {}
+		# RHEL and the likes have /etc/ldap.conf
+		/Redhat|OEL/: {
+			file { '/etc/ldap.conf':
+				ensure  => $ensure ? {
+							'present' => symlink,
+							default   => absent
+						},
+				target  => $ldap::params::config,
+				require => File[$ldap::params::config],
+			}
+		}
+	}
+
+	# require module nsswitch
+	if($nsswitch == true) {
+		class { 'nsswitch':
+			uri         => $uri,
+			base        => $base,
+			module_type => $ensure ? {
+						'present' => 'ldap',
+						default   => 'none'
+					},
+		}
+	}
+	
+	# require module pam
+	if($pam == true) {
+		class { 'pam':
+			module_type => $ensure ? {
+					'present' => 'ldap',
+					default   => 'none'
+				},
+		}
+	}
 }
 

@@ -7,9 +7,9 @@ uri  <%= uri %>
 base <%= base %>
 
 ldap_version   <%= version %>
-timelimit      30
-bind_timelimit 30
-idle_timelimit 3600
+timelimit      <%= timelimit %>
+bind_timelimit <%= bind_timelimit %>
+idle_timelimit <%= idle_timelimit %>
 bind_policy    soft
 deref          never
 
@@ -33,7 +33,7 @@ pam_password         <%= pam_passwd %>
 pam_filter           <%= pam_filter %>
 <% end %>
 
-<% if has_variable?("ssl") and $ssl == true -%>
+<% if ssl == true then -%>
 ssl start_tls
 ssl on
 tls_cacertfile /etc/ssl/certs/ldap.pem
