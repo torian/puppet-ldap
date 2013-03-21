@@ -50,7 +50,7 @@ backend		bdb
 database	bdb
 suffix		"<%= suffix %>"
 directory	<%= scope.lookupvar('ldap::params::db_prefix') %>
-rootdn		"cn=admin,<%= suffix %>"
+rootdn		"<%= suffix %>"
 rootpw		"<%= rootpw %>"
 
 #######################################################################

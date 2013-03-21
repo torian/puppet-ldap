@@ -1,5 +1,6 @@
 
 class ldap::server::master($suffix, $rootpw,
+	$rootdn              = "cn=admin,${suffix}"
 	$bind_anon           = true,
 	$schema_inc          = [],
 	$modules_inc         = [],
