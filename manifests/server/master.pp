@@ -1,15 +1,11 @@
 
 class ldap::server::master($suffix, $rootpw,
-<<<<<<< HEAD
 	$rootdn              = "cn=admin,${suffix}"
-	$bind_anon           = true,
-=======
-        $rootdn              = "cn=admin,$suffix",
->>>>>>> origin/master
 	$schema_inc          = [],
 	$modules_inc         = [],
 	$index_inc           = [],
 	$log_level           = '0',
+	$bind_anon           = true,
 	$ssl                 = false,
 	$ssl_url             = false,
 	$ssl_ca              = 'ca.pem',

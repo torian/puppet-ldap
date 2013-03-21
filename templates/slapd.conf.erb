@@ -49,13 +49,8 @@ backend		bdb
 # FIXME: puppet
 database	bdb
 suffix		"<%= suffix %>"
-<<<<<<< HEAD:templates/slapd.conf.erb
 directory	<%= scope.lookupvar('ldap::params::db_prefix') %>
-rootdn		"<%= suffix %>"
-=======
-directory	<%= db_prefix %>
 rootdn		"<%= rootdn %>"
->>>>>>> origin/master:templates/redhat/etc/openldap/slapd.conf.erb
 rootpw		"<%= rootpw %>"
 
 #######################################################################
