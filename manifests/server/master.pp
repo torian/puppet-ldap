@@ -15,10 +15,15 @@ class ldap::server::master($suffix, $rootpw,
 	$syncprov_checkpoint = '100 10',
 	$syncprov_sessionlog = '100',
 	$sync_binddn         = false,
+	$enable_motd         = false,
 	$ensure              = present) {
 
 	include ldap::params
-
+	
+	if($enable_motd) { 
+		motd::register { 'ldap::server::master': } 
+	}
+	
 	package { $ldap::params::server_package:
 		ensure => $ensure
 	}

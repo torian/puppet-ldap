@@ -35,6 +35,18 @@ describe 'ldap::server::master' do
 			it { should contain_service(opts[os][:service]) }
 			it { should contain_file(opts[os][:prefix]) }
 			it { should contain_file(opts[os][:cfg]) }
+
+			context 'Motd disabled (default)' do
+				it { should_not contain_motd__register('ldap::server::master') }
+			end
+			context 'Motd enabled' do
+				let(:params) { {
+					:suffix => 'dc=example,dc=com',
+					:rootpw => 'asdqw',
+					:enable_motd => true 
+				} }
+				it { should contain_motd__register('ldap::server::master') }
+			end
 		end
 	end
 	

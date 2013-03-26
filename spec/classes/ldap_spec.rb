@@ -29,6 +29,18 @@ describe 'ldap' do
 			it { should include_class('ldap::params') }
 			it { should contain_package(opts[os][:package]) }
 			it { should contain_file(opts[os][:ldapcfg]) }
+
+			context 'Motd disabled (default)' do
+				it { should_not contain_motd__register('ldap') }
+			end
+			context 'Motd enabled' do
+				let(:params) { {
+					:uri  => 'ldap://ldap.example.com',
+					:base => 'dc=suffix',
+					:enable_motd => true 
+				} }
+				it { should contain_motd__register('ldap') }
+			end
 		end
 	end
 end

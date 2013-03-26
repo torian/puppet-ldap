@@ -20,9 +20,14 @@ class ldap::server::slave($suffix, $rootpw,
 	$ssl_ca         = 'ca.pem',
 	$ssl_cert       = 'cert.pem',
 	$ssl_key        = 'cert.key',
+	$enable_motd    = false,
 	$ensure         = 'present') {
 
 	include ldap::params
+
+	if($enable_motd) {
+		motd::register { 'ldap::server::slave': }
+	}
 
 	package { $ldap::params::server_package:
 		ensure => $ensure

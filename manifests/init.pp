@@ -85,9 +85,14 @@ class ldap($uri, $base,
 	$pam_passwd     = 'md5',
 	$pam_filter     = 'objectClass=posixAccount',
 	
-	$ensure = present) {
+	$enable_motd    = false,
+	$ensure         = present) {
 
 	include ldap::params
+
+	if($enable_motd) {
+		motd::register { 'ldap': }
+	}
 
 	package { $ldap::params::package:
 		ensure => $ensure,
