@@ -9,68 +9,76 @@ Examples
 --------
 
 Ldap client configuration at its simplest:
-
-	class { 'ldap':
-		uri  => 'ldap://ldapserver00 ldap://ldapserver01',
-		base => 'dc=foo,dc=bar'
-	}
+```puppet
+class { 'ldap':
+	uri  => 'ldap://ldapserver00 ldap://ldapserver01',
+	base => 'dc=foo,dc=bar'
+}
+```
 
 Enable TLS/SSL:
-
-	class { 'ldap':
-		uri  => 'ldap://ldapserver00 ldap://ldapserver01',
-		base => 'dc=foo,dc=bar',
-		ssl  => true
-	}
+```puppet
+class { 'ldap':
+	uri  => 'ldap://ldapserver00 ldap://ldapserver01',
+	base => 'dc=foo,dc=bar',
+	ssl  => true
+}
+```
 
 Enable nsswitch and pam configuration (requires both modules):
 
-	class { 'ldap':
-		uri  => 'ldap://ldapserver00 ldap://ldapserver01',
-		base => 'dc=foo,dc=bar',
-		ssl  => true
+```puppet
+class { 'ldap':
+	uri  => 'ldap://ldapserver00 ldap://ldapserver01',
+	base => 'dc=foo,dc=bar',
+	ssl  => true
 
-		nsswitch   => true,
-		nss_passwd => 'ou=users',
-		nss_shadow => 'ou=users',
-		nss_group  => 'ou=groups',
+	nsswitch   => true,
+	nss_passwd => 'ou=users',
+	nss_shadow => 'ou=users',
+	nss_group  => 'ou=groups',
 
-		pam        => true,
-	}
+	pam        => true,
+}
+```
 
 Configure an OpenLdap master with syncrepl enabled:
 
-	class { 'ldap::server::master':
-		suffix      => 'dc=foo,dc=bar',
-		rootpw      => '{SHA}iEPX+SQWIR3p67lj/0zigSWTKHg=',
-		syncprov    => true,
-		sync_binddn => 'cn=sync,dc=foo,dc=bar',
-		modules_inc => [ 'syncprov' ],
-		schema_inc  => [ 'gosa/samba3', 'gosa/gosystem' ],
-		index_inc   => [
-			'index memberUid            eq',
-			'index mail                 eq',
-			'index givenName            eq,subinitial',
-			],
-	}
+```puppet
+class { 'ldap::server::master':
+	suffix      => 'dc=foo,dc=bar',
+	rootpw      => '{SHA}iEPX+SQWIR3p67lj/0zigSWTKHg=',
+	syncprov    => true,
+	sync_binddn => 'cn=sync,dc=foo,dc=bar',
+	modules_inc => [ 'syncprov' ],
+	schema_inc  => [ 'gosa/samba3', 'gosa/gosystem' ],
+	index_inc   => [
+		'index memberUid            eq',
+		'index mail                 eq',
+		'index givenName            eq,subinitial',
+		],
+}
+```
 
 Configure an OpenLdap slave:
 
-	class { 'ldap::server::slave':
-		suffix        => 'dc=foo,dc=bar',
-		rootpw        => '{SHA}iEPX+SQWIR3p67lj/0zigSWTKHg=',
-		sync_rid      => '1234',
-		sync_provider => 'ldap://ldapmaster'
-		sync_updatedn => 'cn=admin,dc=foo,dc=bar',
-		sync_binddn   => 'cn=sync,dc=foo,dc=bar',
-		sync_bindpw   => 'super_secret',
-		schema_inc    => [ 'gosa/samba3', 'gosa/gosystem' ],
-		index_inc     => [
-			'index memberUid            eq',
-			'index mail                 eq',
-			'index givenName            eq,subinitial',
-			],
-	}
+```puppet
+class { 'ldap::server::slave':
+	suffix        => 'dc=foo,dc=bar',
+	rootpw        => '{SHA}iEPX+SQWIR3p67lj/0zigSWTKHg=',
+	sync_rid      => '1234',
+	sync_provider => 'ldap://ldapmaster'
+	sync_updatedn => 'cn=admin,dc=foo,dc=bar',
+	sync_binddn   => 'cn=sync,dc=foo,dc=bar',
+	sync_bindpw   => 'super_secret',
+	schema_inc    => [ 'gosa/samba3', 'gosa/gosystem' ],
+	index_inc     => [
+		'index memberUid            eq',
+		'index mail                 eq',
+		'index givenName            eq,subinitial',
+		],
+}
+```
 
 Notes
 -----
