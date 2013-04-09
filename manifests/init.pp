@@ -85,6 +85,9 @@ class ldap($uri, $base,
 	$pam_passwd     = 'md5',
 	$pam_filter     = 'objectClass=posixAccount',
 	
+	$binddn         = false,
+	$bindpw         = false,
+	
 	$enable_motd    = false,
 	$ensure         = present) {
 
