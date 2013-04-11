@@ -5,14 +5,18 @@ describe 'ldap' do
 
 	opts = {
 		'Debian' => {
-			:arch    => 'amd64',
-			:package => 'ldap-utils',
-			:ldapcfg => '/etc/ldap/ldap.conf',
+			:arch      => 'amd64',
+			:package   => 'ldap-utils',
+			:ldapcfg   => '/etc/ldap/ldap.conf',
+			:cacertdir => '/etc/ssl/certs',
+			:ssl_cert  => 'ldap.pem',
 		},
 		'Redhat' => {
-			:arch    => 'x86_64',
-			:package => 'openldap-clients',
-			:ldapcfg => '/etc/openldap/ldap.conf',
+			:arch      => 'x86_64',
+			:package   => 'openldap-clients',
+			:ldapcfg   => '/etc/openldap/ldap.conf',
+			:cacertdir => '/etc/openldap/ssl',
+			:ssl_cert  => 'ldap.pem',
 		}
 	} 
 	
@@ -40,6 +44,28 @@ describe 'ldap' do
 					:enable_motd => true 
 				} }
 				it { should contain_motd__register('ldap') }
+			end
+
+			context 'SSL Enabled with certificate filename' do
+				let(:params) { {
+					:uri      => 'ldap://ldap.example.com',
+					:base     => 'dc=suffix',
+					:ssl      => true,
+					:ssl_cert => opts[os][:ssl_cert],
+				} }
+				it { should contain_file("#{opts[os][:cacertdir]}/#{opts[os][:ssl_cert]}") } 
+			end
+
+			context 'SSL Enabled without certificate' do
+				let(:params) { {
+					:uri      => 'ldap://ldap.example.com',
+					:base     => 'dc=suffix',
+					:ssl      => true,
+				} }
+				it { expect {
+					should contain_file("#{opts[os][:cacertdir]}/#{opts[os][:ssl_cert]}") 
+					}.to raise_error(Puppet::Error, /^When ssl is.*/)
+				}
 			end
 		end
 	end

@@ -5,26 +5,27 @@ class ldap::params {
 	
 		Debian: {
 
-			$package = [ 'ldap-utils' ]
+			$package   = [ 'ldap-utils' ]
 			
-			$prefix  = '/etc/ldap'
-			$owner   = 'root'
-			$group   = 'root'
-			$config  = 'ldap.conf'
+			$prefix    = '/etc/ldap'
+			$owner     = 'root'
+			$group     = 'root'
+			$config    = 'ldap.conf'
+			$cacertdir = '/etc/ssl/certs'
 
 			$service         = 'slapd'
 			$server_script   = 'slapd'
 			$server_pattern  = 'slapd'
-			$server_package  = 'slapd'
+			$server_package  = [ 'slapd' ]
 			$server_config   = 'slapd.conf'
 			$server_owner    = 'openldap'
 			$server_group    = 'openldap'
 			$db_prefix       = '/var/lib/ldap'
-			$ssl_prefix      = '/etc/openssl/ssl'
+			$ssl_prefix      = '/etc/ssl/certs'
 			$server_run      = '/var/run/openldap'
 
 			case $architecture {
-				amd64: { 
+				/^amd64/: { 
 					$module_prefix = '/usr/lib64/ldap' 
 				}
 
@@ -58,12 +59,13 @@ class ldap::params {
 		# For redhat ovs oel
 		Redhat: {
 			
-			$package = [ 'openldap', 'openldap-clients' ]
+			$package   = [ 'openldap', 'openldap-clients' ]
 			
-			$prefix  = '/etc/openldap'
-			$owner   = 'root'
-			$group   = 'root'
-			$config  = 'ldap.conf'
+			$prefix    = '/etc/openldap'
+			$owner     = 'root'
+			$group     = 'root'
+			$config    = 'ldap.conf'
+			$cacertdir = '/etc/ssl/certs'
 
 			$server_package  = [ 'openldap-servers' ]
 			$server_config   = 'slapd.conf'
@@ -75,11 +77,21 @@ class ldap::params {
 
 			$schema_prefix   = "${prefix}/schema"
 			$db_prefix     = '/var/lib/ldap'
-			if($architecture =~ /^x86_64/) {
-				$module_prefix = '/usr/lib64/openldap'
-			} else {
-				$module_prefix = '/usr/lib/openldap'
+
+			case $architecture {
+				/^amd64/: { 
+					$module_prefix = '/usr/lib64/openldap'
+				}
+
+				/^i?[346]86/: {
+					$module_prefix = '/usr/lib/openldap'
+				}
+
+				default: {
+					fail("Architecture not supported by this module")
+				}
 			}
+
 			$ssl_prefix    = '/etc/openssl/ssl'
 			$server_run    = '/var/run/openldap'
 			$schema_base   = [ 'core', 'cosine', 'nis', 'inetorgperson', 'authldap' ]
@@ -98,7 +110,8 @@ class ldap::params {
 		}
 
 		default:  {
-			fail("Operating system not supported")
+			fail("Operating system ${::operatingsystem} not supported")
 		}
 	}
 }
+
