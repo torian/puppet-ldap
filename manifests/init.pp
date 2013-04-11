@@ -71,6 +71,8 @@ class ldap($uri, $base,
 	$timelimit      = 30,
 	$bind_timelimit = 30,
 	$idle_timelimit = 60,
+	$binddn         = false,
+	$bindpw         = false,
 	$ssl            = false,
 	$ssl_cert       = false,
 	
@@ -85,8 +87,6 @@ class ldap($uri, $base,
 	$pam_passwd     = 'md5',
 	$pam_filter     = 'objectClass=posixAccount',
 	
-	$binddn         = false,
-	$bindpw         = false,
 	
 	$enable_motd    = false,
 	$ensure         = present) {
