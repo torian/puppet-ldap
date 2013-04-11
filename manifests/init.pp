@@ -65,7 +65,6 @@
 #	pam        => true,
 # }
 #
-
 class ldap($uri, $base,
 	$version        = '3',
 	$timelimit      = 30,
@@ -86,7 +85,6 @@ class ldap($uri, $base,
 	$pam_att_member = 'member',
 	$pam_passwd     = 'md5',
 	$pam_filter     = 'objectClass=posixAccount',
-	
 	
 	$enable_motd    = false,
 	$ensure         = present) {
