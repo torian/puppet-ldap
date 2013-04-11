@@ -17,11 +17,14 @@ class { 'ldap':
 ```
 
 Enable TLS/SSL:
+Note that *ssl_cert* should be the CA's certificate file, and
+it should be located under *puppet:///files/ldap*.
 ```puppet
 class { 'ldap':
-	uri  => 'ldap://ldapserver00 ldap://ldapserver01',
-	base => 'dc=foo,dc=bar',
-	ssl  => true
+	uri      => 'ldap://ldapserver00 ldap://ldapserver01',
+	base     => 'dc=foo,dc=bar',
+	ssl      => true,
+	ssl_cert => 'ldapserver.pem'
 }
 ```
 
@@ -29,9 +32,10 @@ Enable nsswitch and pam configuration (requires both modules):
 
 ```puppet
 class { 'ldap':
-	uri  => 'ldap://ldapserver00 ldap://ldapserver01',
-	base => 'dc=foo,dc=bar',
-	ssl  => true
+	uri      => 'ldap://ldapserver00 ldap://ldapserver01',
+	base     => 'dc=foo,dc=bar',
+	ssl      => true
+	ssl_cert => 'ldapserver.pem',
 
 	nsswitch   => true,
 	nss_passwd => 'ou=users',
