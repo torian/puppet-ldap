@@ -13,6 +13,11 @@ idle_timelimit <%= idle_timelimit %>
 bind_policy    soft
 deref          never
 
+<% if binddn != false then %>
+binddn <%= binddn %>
+bindpw <%= bindpw %>
+<% end %>
+
 <% if nsswitch == true then %>
 # DNs in groups
 #nss_schema         rfc2307bis
