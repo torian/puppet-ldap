@@ -49,7 +49,13 @@
 # class { 'ldap':
 #	uri  => 'ldap://ldapserver00 ldap://ldapserver01',
 #	base => 'dc=suffix',
-#	ssl  => false,
+# }
+#
+# class { 'ldap':
+#	uri  => 'ldap://ldapserver00 ldap://ldapserver01',
+#	base => 'dc=suffix',
+#	ssl  => true,
+#	ssl_cert => 'ldapserver00.pem'
 # }
 #
 # class { 'ldap':
@@ -86,7 +92,6 @@ class ldap($uri, $base,
 	$pam_att_member = 'member',
 	$pam_passwd     = 'md5',
 	$pam_filter     = 'objectClass=posixAccount',
-	
 	
 	$enable_motd    = false,
 	$ensure         = present) {
@@ -125,6 +130,30 @@ class ldap($uri, $base,
 				target  => $ldap::params::config,
 				require => File[$ldap::params::config],
 			}
+		}
+	}
+
+	if($ssl) {
+		if(!$ssl_cert) {
+			fail("When ssl is enabled you must define ssl_cert (filename)")
+		}
+		
+		# Set the certificate name from the uri.
+		#$cert_name = regsubst($uri, '/^([a-zA-Z0-9_-]+)(\..*)$/', '\1')
+		
+		file { "${ldap::params::cacertdir}/${ssl_cert}":
+			ensure => $ensure,
+			owner  => 'root',
+			group  => 'root',
+			mode   => 0640,
+			source => "puppet://ldap/${ssl_cert}"
+		}
+		
+		# Create certificate hash file
+		exec { "Build cert hash":
+			command => "ln -s ${ldap::params::cacertdir}/${ssl_cert} ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::cacertdir}/${ssl_cert}).0",
+			unless  => "test -f ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::cacertdir}/${ssl_cert}).0",
+			require => File["${ldap::params::cacertdir}/${ssl_cert}"]
 		}
 	}
 

@@ -39,12 +39,12 @@ pam_filter           <%= pam_filter %>
 <% end %>
 
 <% if ssl == true then -%>
-ssl start_tls
-ssl on
-tls_cacertfile /etc/ssl/certs/ldap.pem
+ssl           start_tls
+tls_reqcert   never
+tls_cacertdir <%= scope.lookupvar('ldap::params::cacertdir') %>
 <% else -%>
-#ssl start_tls
-#ssl on
-#TLS_CACERTFILE /etc/ssl/certs/ldap.pem
+#ssl           start_tls
+#tls_reqcert   never
+#tls_cacertdir <%= scope.lookupvar('ldap::params::cacertdir') %>
 <% end -%>
 

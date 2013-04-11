@@ -38,7 +38,7 @@ moduleload	<%= mod %>
 TLSCACertificateFile   <%= scope.lookupvar('ldap::params::ssl_prefix') %>/<%= ssl_ca   %>
 TLSCertificateFile     <%= scope.lookupvar('ldap::params::ssl_prefix') %>/<%= ssl_cert %>
 TLSCertificateKeyFile  <%= scope.lookupvar('ldap::params::ssl_prefix') %>/<%= ssl_key  %>
-TLSVerifyClient        allow
+#TLSVerifyClient        allow
 <% end -%>
 
 #######################################################################
