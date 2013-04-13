@@ -1,0 +1,7 @@
+
+2013-04-08 - Version 0.1.1
+ * Fixed support on the client side fot SSL/TLS
+ * Added binddn / bindpw parameters for client (zoide)
+
+2013-04-08 - Version 0.0.1
+ * Initial commit
