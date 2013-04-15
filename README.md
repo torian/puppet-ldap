@@ -92,17 +92,18 @@ class { 'ldap::server::slave':
 Notes
 -----
 
- * Ldap client configuration tested on:
-   - Debian: 5.0   / 6.0
+Ldap client configuration tested on:
+ * Debian: 5.0   / 6.0
+
+Requirements
+------------
 
  * If nsswitch is enabled (nsswitch => true) you'll need
-   https://github.com/torian/puppet-nsswitch.git
-
+   [puppet-nsswitch](https://github.com/torian/puppet-nsswitch.git)
  * If pam is enabled (pam => true) you'll need
-   https://github.com/torian/puppet-pam.git
-
+   [puppet-pam](https://github.com/torian/puppet-pam.git)
  * If enable_motd is enabled (enable_motd => true) you'll need
-   https://github.com/torian/puppet-motd.git
+   [puppet-motd](https://github.com/torian/puppet-motd.git)
 
 TODO
 ----
