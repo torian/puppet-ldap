@@ -1,67 +1,126 @@
-# = Class: ldap
+# == Class: ldap
 #
-# The main class handles ldap client configuration and
-# nss_ldap and pam_ldap options.
+# Puppet module to manage client and server configuration for
+# **OpenLdap**.
 #
-# Additional parametrized classes:
-#  ldap::server::master
-#  ldap::server::slave
 #
-# == Parameters:
-# 
-# Required parameters:
-#  $uri::            ldap uri in the form of 'ldap:://'
-#  $base::           base for search
+# === Parameters
 #
-# Optional parameters (otherwise noted, defaults to false):
-#  $version::        LDAP protocol version tu use. Defaults to '3'
-#  $ensure::         Enables or disables ldap configuration. Defaults to 'present'
-#                    (valid options are present|absent)
-#  $ssl::            if set to true, enables client to
-#                     connect using SSL
-#  $ssl_cert::       filname for the remote server certificate
+#  [uri]
+#    Ldap URI as a string. Multiple values can be set
+#    separated by spaces ('ldap://ldapmaster ldap://ldapslave')
+#    **Required**
 #
-#  $nsswitch::       if set to true, configures nss_ldap options 
-#  $nss_passwd::     branch on which users reside. base is appended
-#  $nss_shadow::     branch on which users reside. base is appended
-#  $nss_group::      branch on which groups reside. base is appended
+#  [base]
+#    Ldap base dn.
+#    **Required**
 #
-#  $pam::            if set to true, configures pam_ldap options
-#  $pam_att_login::  Attribute for user's login. Defaults to 'uid'
-#  $pam_att_member:: Defaults to 'member'
-#  $pam_passwd::     Password change protocol. Defaults to 'md5'
-#  $pam_filter::     Filter for user information. Defaults to 'objectClass=posixAccount'
+#  [version]
+#    Ldap version for the connecting client
+#    *Optional* (defaults to 3)
 #
-# == Actions:
-#  Creation and management of ldap.conf
+#  [timelimit]
+#    Time limit in seconds to use when performing searches
+#    *Optional* (defaults to 30)
+#    
+#  [bind_timelimit]
+#    *Optional* (defaults to 30)
 #
-# == Requires:
-#   - Class nsswitch
-#   - Class pam
+#  [idle_timelimit]
+#    *Optional* (defaults to 30)
+#    
+#  [binddn]
+#    Default bind dn to use when performing ldap operations
+#    *Optional* (defaults to false)
+#    
+#  [bindpw]
+#    Password for default bind dn
+#    *Optional* (defaults to false)
+#    
+#  [ssl]
+#    Enable TLS/SSL negotiation with the server
+#    *Requires*: ssl_cert parameter
+#    *Optional* (defaults to false)
+#    
+#  [ssl_cert]
+#    Filename for the CA (or self signed certificate). It should
+#    be located under puppet:///files/ldap/
+#    *Optional* (defaults to false)
+#    
+#  [nsswitch]
+#    If enabled (nsswitch => true) enables nsswitch to use
+#    ldap as a backend for password, group and shadow databases.
+#    *Requires*: https://github.com/torian/puppet-nsswitch.git (in alpha)
+#    *Optional* (defaults to false)
+#    
+#  [nss_passwd]
+#    Search base for the passwd database. *base* will be appended. 
+#    *Optional* (defaults to false)
+#    
+#  [nss_group]
+#    Search base for the group database. *base* will be appended. 
+#    *Optional* (defaults to false)
+#    
+#  [nss_shadow]
+#    Search base for the shadow database. *base* will be appended. 
+#    *Optional* (defaults to false)
+#    
+#  [pam]
+#    If enabled (pam => true) enables pam module, which will
+#    be setup to use pam_ldap, to enable authentication.
+#    *Requires*: https://github.com/torian/puppet-pam.git (in alpha)
+#    *Optional* (defaults to false)
+#    
+#  [pam_att_login]
+#    User's login attribute
+#    *Optional* (defaults to *'uid'*)
+#    
+#  [pam_att_member]
+#    Member attribute to use when testing user's membership
+#    *Optional* (defaults to *'member'*)
+#    
+#  [pam_passwd]
+#    Password hash algorithm
+#    *Optional* (defaults to *'md5'*)
+#    
+#  [pam_filter]
+#    Filter to use when retrieving user information
+#    *Optional* (defaults to *'objectClass=posixAccount'*)
+#    
+#  [enable_motd]
+#    Use motd to report the usage of this module.
+#    *Requires*: https://github.com/torian/puppet-motd.git
+#    *Optional* (defaults to false)
+#    
+#  [ensure]
+#    *Optional* (defaults to 'present')
+#
 #
 # == Tested/Works on:
 #   - Debian: 5.0   / 6.0   /
 #   - RHEL    5.2   / 5.4   / 5.5   / 6.1   / 6.2 
 #   - OVS:    2.1.1 / 2.1.5 / 2.2.0 / 3.0.2 /
 #
-# == Sample Usage:
-# 
+#
+# === Examples
+#
 # class { 'ldap':
 #	uri  => 'ldap://ldapserver00 ldap://ldapserver01',
 #	base => 'dc=suffix',
 # }
 #
 # class { 'ldap':
-#	uri  => 'ldap://ldapserver00 ldap://ldapserver01',
+#	uri  => 'ldap://ldapserver00',
 #	base => 'dc=suffix',
 #	ssl  => true,
 #	ssl_cert => 'ldapserver00.pem'
 # }
 #
 # class { 'ldap':
-#	uri        => 'ldap://ldapserver00 ldap://ldapserver01',
+#	uri        => 'ldap://ldapserver00',
 #	base       => 'dc=suffix',
-#	ssl        => false,
+#	ssl        => true,
+#	ssl_cert => 'ldapserver00.pem'
 #
 #	nsswitch   => true,
 #	nss_passwd => 'ou=users',
@@ -71,7 +130,20 @@
 #	pam        => true,
 # }
 #
-class ldap($uri, $base,
+#
+# === Authors
+#
+# Emiliano Castagnari ecastag@gmail.com (a.k.a. Torian)
+#
+#
+# === Copyleft
+#
+# Copyleft (C) 2012 Emiliano Castagnari ecastag@gmail.com (a.k.a. Torian)
+#
+#
+class ldap(
+	$uri, 
+	$base,
 	$version        = '3',
 	$timelimit      = 30,
 	$bind_timelimit = 30,

@@ -4,12 +4,15 @@ Puppet OpenLDAP Module
 Introduction
 ------------
 
+Puppet module to manage client and server configuration for
+**OpenLdap**.
 
-Examples
---------
+Usage
+-----
 
 Ldap client configuration at its simplest:
-```puppet
+
+```
 class { 'ldap':
 	uri  => 'ldap://ldapserver00 ldap://ldapserver01',
 	base => 'dc=foo,dc=bar'
@@ -17,9 +20,11 @@ class { 'ldap':
 ```
 
 Enable TLS/SSL:
+
 Note that *ssl_cert* should be the CA's certificate file, and
-it should be located under *puppet:///files/ldap*.
-```puppet
+it should be located under *puppet:///files/ldap/*.
+
+```
 class { 'ldap':
 	uri      => 'ldap://ldapserver00 ldap://ldapserver01',
 	base     => 'dc=foo,dc=bar',
@@ -30,7 +35,7 @@ class { 'ldap':
 
 Enable nsswitch and pam configuration (requires both modules):
 
-```puppet
+```
 class { 'ldap':
 	uri      => 'ldap://ldapserver00 ldap://ldapserver01',
 	base     => 'dc=foo,dc=bar',
@@ -48,7 +53,7 @@ class { 'ldap':
 
 Configure an OpenLdap master with syncrepl enabled:
 
-```puppet
+```
 class { 'ldap::server::master':
 	suffix      => 'dc=foo,dc=bar',
 	rootpw      => '{SHA}iEPX+SQWIR3p67lj/0zigSWTKHg=',
@@ -66,7 +71,7 @@ class { 'ldap::server::master':
 
 Configure an OpenLdap slave:
 
-```puppet
+```
 class { 'ldap::server::slave':
 	suffix        => 'dc=foo,dc=bar',
 	rootpw        => '{SHA}iEPX+SQWIR3p67lj/0zigSWTKHg=',
@@ -87,22 +92,25 @@ class { 'ldap::server::slave':
 Notes
 -----
 
- * Ldap client config tested / works on:
-   - Debian: 5.0   / 6.0   
-   - RHEL    5.2   / 5.4   / 5.5   / 6.1   / 6.2 
-   - OVS:    2.1.1 / 2.1.5 / 2.2.0 / 3.0.2 
- * If nsswitch or pam modules are enabled (i.e. nsswitch => true) you need my nsswitch or pam module (or both)
+ * Ldap client configuration tested on:
+   - Debian: 5.0   / 6.0
 
-Issues
-------
+ * If nsswitch is enabled (nsswitch => true) you'll need
+   https://github.com/torian/puppet-nsswitch.git
 
- * Should do some more testing on RHEL 6.x to be able to use sssd (although works with nslcd)
+ * If pam is enabled (pam => true) you'll need
+   https://github.com/torian/puppet-pam.git
+
+ * If enable_motd is enabled (enable_motd => true) you'll need
+   https://github.com/torian/puppet-motd.git
 
 TODO
 ----
 
- * Make sure SSL configuration works as expected
- * Document a little bit more
+ * ldap::server::master and ldap::server::slave do not copy
+   the schemas specified by *index_inc*. It just adds an include to slapd
+ * Add TLS/SSL support for ldap::server::master and ldap::server::slave
+ * Need support for extending ACLs
 
 CopyLeft
 ---------
