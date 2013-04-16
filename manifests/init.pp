@@ -217,7 +217,7 @@ class ldap(
 			owner  => 'root',
 			group  => 'root',
 			mode   => 0640,
-			source => "puppet:///ldap/${ssl_cert}"
+			source => "puppet:///files/ldap/${ssl_cert}"
 		}
 		
 		# Create certificate hash file

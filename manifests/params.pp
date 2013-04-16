@@ -3,7 +3,7 @@ class ldap::params {
 
 	case $operatingsystem {
 	
-		Debian: {
+		'Debian': {
 
 			$package   = [ 'ldap-utils' ]
 			
@@ -34,7 +34,7 @@ class ldap::params {
 				}
 
 				default: {
-					fail("Architecture not supported by this module")
+					fail("Architecture not supported (${architecture})")
 				}
 			}
 
@@ -56,8 +56,7 @@ class ldap::params {
 
 		}
 
-		# For redhat ovs oel
-		Redhat: {
+		'Redhat': {
 			
 			$package   = [ 'openldap', 'openldap-clients' ]
 			
@@ -65,7 +64,7 @@ class ldap::params {
 			$owner     = 'root'
 			$group     = 'root'
 			$config    = 'ldap.conf'
-			$cacertdir = '/etc/ssl/certs'
+			$cacertdir = '/etc/openldap/cacerts'
 
 			$server_package  = [ 'openldap-servers' ]
 			$server_config   = 'slapd.conf'
@@ -79,7 +78,7 @@ class ldap::params {
 			$db_prefix     = '/var/lib/ldap'
 
 			case $architecture {
-				/^amd64/: { 
+				/^x86_64/: { 
 					$module_prefix = '/usr/lib64/openldap'
 				}
 
@@ -88,11 +87,11 @@ class ldap::params {
 				}
 
 				default: {
-					fail("Architecture not supported by this module")
+					fail("Architecture not supported (${architecture})")
 				}
 			}
 
-			$ssl_prefix    = '/etc/openssl/ssl'
+			$ssl_prefix    = '/etc/openldap/cacerts'
 			$server_run    = '/var/run/openldap'
 			$schema_base   = [ 'core', 'cosine', 'nis', 'inetorgperson', 'authldap' ]
 			$modules_base  = [ 'back_bdb' ]

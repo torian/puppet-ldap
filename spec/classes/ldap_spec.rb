@@ -15,7 +15,7 @@ describe 'ldap' do
 			:arch      => 'x86_64',
 			:package   => 'openldap-clients',
 			:ldapcfg   => '/etc/openldap/ldap.conf',
-			:cacertdir => '/etc/openldap/ssl',
+			:cacertdir => '/etc/openldap/cacerts',
 			:ssl_cert  => 'ldap.pem',
 		}
 	} 
