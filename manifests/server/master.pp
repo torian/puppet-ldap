@@ -16,31 +16,31 @@
 #
 #  [rootdn]
 #    
-#    *Optional* (defaults to 3)
+#    *Optional* (defaults to 'cn=admin,${suffix}')
 #
 #  [schema_inc]
 #    
-#    *Optional* (defaults to 30)
+#    *Optional* (defaults to [])
 #    
 #  [modules_inc]
 #    
-#    *Optional* (defaults to 30)
+#    *Optional* (defaults to [])
 #
 #  [index_inc]
 #    
-#    *Optional* (defaults to 30)
+#    *Optional* (defaults to [])
 #    
 #  [log_level]
 #    
-#    *Optional* (defaults to false)
+#    *Optional* (defaults to 0)
 #    
 #  [bind_anon]
 #    
-#    *Optional* (defaults to false)
+#    *Optional* (defaults to true)
 #    
 #  [ssl]
 #    
-#    *Requires*: ssl_cert parameter
+#    *Requires*: ssl_{cert,ca,key} parameter
 #    *Optional* (defaults to false)
 #    
 #  [ssl_cert]
@@ -48,10 +48,6 @@
 #    *Optional* (defaults to false)
 #    
 #  [ssl_ca]
-#    
-#    *Optional* (defaults to false)
-#    
-#  [ssl_cert]
 #    
 #    *Optional* (defaults to false)
 #    
@@ -65,15 +61,15 @@
 #    
 #  [syncprov_checkpoint]
 #    
-#    *Optional* (defaults to false)
+#    *Optional* (defaults to '100 10')
 #    
 #  [syncprov_sessionlog]
 #    
-#    *Optional* (defaults to *'uid'*)
+#    *Optional* (defaults to *'100'*)
 #    
 #  [sync_binddn]
 #    
-#    *Optional* (defaults to *'member'*)
+#    *Optional* (defaults to *'false'*)
 #    
 #  [enable_motd]
 #    Use motd to report the usage of this module.
@@ -92,32 +88,19 @@
 #
 # === Examples
 #
-# class { 'ldap':
-#	uri  => 'ldap://ldapserver00 ldap://ldapserver01',
-#	base => 'dc=suffix',
-# }
-#
-# class { 'ldap':
-#	uri  => 'ldap://ldapserver00',
-#	base => 'dc=suffix',
-#	ssl  => true,
-#	ssl_cert => 'ldapserver00.pem'
-# }
-#
-# class { 'ldap':
-#	uri        => 'ldap://ldapserver00',
-#	base       => 'dc=suffix',
-#	ssl        => true,
-#	ssl_cert => 'ldapserver00.pem'
-#
-#	nsswitch   => true,
-#	nss_passwd => 'ou=users',
-#	nss_shadow => 'ou=users',
-#	nss_group  => 'ou=groups',
-#
-#	pam        => true,
-# }
-#
+# class { 'ldap::server::master':
+#	suffix      => 'dc=foo,dc=bar',
+#	rootpw      => '{SHA}iEPX+SQWIR3p67lj/0zigSWTKHg=',
+#	syncprov    => true,
+#	sync_binddn => 'cn=sync,dc=foo,dc=bar',
+#	modules_inc => [ 'syncprov' ],
+#	schema_inc  => [ 'gosa/samba3', 'gosa/gosystem' ],
+#	index_inc   => [
+#		'index memberUid            eq',
+#		'index mail                 eq',
+#		'index givenName            eq,subinitial',
+#		],
+#	}
 #
 # === Authors
 #
@@ -129,8 +112,9 @@
 # Copyleft (C) 2012 Emiliano Castagnari ecastag@gmail.com (a.k.a. Torian)
 #
 #
-
-class ldap::server::master($suffix, $rootpw,
+class ldap::server::master(
+	$suffix,
+	$rootpw,
 	$rootdn              = "cn=admin,${suffix}",
 	$schema_inc          = [],
 	$modules_inc         = [],
@@ -138,10 +122,9 @@ class ldap::server::master($suffix, $rootpw,
 	$log_level           = '0',
 	$bind_anon           = true,
 	$ssl                 = false,
-	$ssl_url             = false,
-	$ssl_ca              = 'ca.pem',
-	$ssl_cert            = 'cert.pem',
-	$ssl_key             = 'cert.key',
+	$ssl_cert            = false,
+	$ssl_ca              = false,
+	$ssl_key             = false,
 	$syncprov            = false,
 	$syncprov_checkpoint = '100 10',
 	$syncprov_sessionlog = '100',
@@ -196,14 +179,14 @@ class ldap::server::master($suffix, $rootpw,
 		require => File[$ldap::params::prefix],
 	}
 
-	if($ssl == true) {
-		file { "${ssl_prefix}/${ssl_ca}":
-			ensure  => $ensure,
-			mode    => 0640,
-			owner   => $ldap::params::server_owner,
-			group   => $ldap::params::server_group,
-			source  => "puppet://${mod_prefix}"
-		}
-	}
+	#if($ssl == true) {
+	#	file { "${ssl_prefix}/${ssl_ca}":
+	#		ensure  => $ensure,
+	#		mode    => 0640,
+	#		owner   => $ldap::params::server_owner,
+	#		group   => $ldap::params::server_group,
+	#		source  => "puppet://${mod_prefix}"
+	#	}
+	#}
 }
 
