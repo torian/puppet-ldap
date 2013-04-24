@@ -184,8 +184,17 @@ class ldap(
 		group   => $ldap::params::group,
 	}
 
+	file { "${ldap::params::prefix}":
+    ensure  => $ensure ? {
+                present => directory,
+                default => absent,
+              },
+    require => Package[$ldap::params::package],
+  }
+
 	file { "${ldap::params::prefix}/${ldap::params::config}":
 		content => template("ldap/${ldap::params::config}.erb"),
+    require => Package[$ldap::params::prefix],
 	}
 	
 	case $operatingsystem {

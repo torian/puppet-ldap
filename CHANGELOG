@@ -1,8 +1,12 @@
+2013-04-16 - Version 0.1.3
+ * init.pp: added dependencies on ldap() for config files
+
 2013-04-16 - Version 0.1.2
  * init.pp: certificate source missed 'files' prefix
  * params.pp: fixed cacertdir variable
  * Improved rdoc documentation
  * Removed github flavored markup as it does not play well with puppet forge
+ * Removed bad linked fixture for concat and motd
 
 2013-04-08 - Version 0.1.1
  * Fixed support on the client side fot SSL/TLS
