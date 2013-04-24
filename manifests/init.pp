@@ -194,25 +194,9 @@ class ldap(
 
 	file { "${ldap::params::prefix}/${ldap::params::config}":
 		content => template("ldap/${ldap::params::config}.erb"),
-    require => Package[$ldap::params::prefix],
+    require => File[$ldap::params::prefix],
 	}
 	
-	case $operatingsystem {
-
-		Debian:  {}
-		# RHEL and the likes have /etc/ldap.conf
-		/Redhat|OEL/: {
-			file { '/etc/ldap.conf':
-				ensure  => $ensure ? {
-							'present' => symlink,
-							default   => absent
-						},
-				target  => $ldap::params::config,
-				require => File[$ldap::params::config],
-			}
-		}
-	}
-
 	if($ssl) {
 		if(!$ssl_cert) {
 			fail("When ssl is enabled you must define ssl_cert (filename)")

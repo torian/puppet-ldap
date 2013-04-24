@@ -1,5 +1,6 @@
 2013-04-16 - Version 0.1.3
  * init.pp: added dependencies on ldap() for config files
+ * init.pp: fixed missing path on RHEL
 
 2013-04-16 - Version 0.1.2
  * init.pp: certificate source missed 'files' prefix
