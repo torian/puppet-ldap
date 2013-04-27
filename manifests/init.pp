@@ -142,100 +142,99 @@
 #
 #
 class ldap(
-	$uri, 
-	$base,
-	$version        = '3',
-	$timelimit      = 30,
-	$bind_timelimit = 30,
-	$idle_timelimit = 60,
-	$binddn         = false,
-	$bindpw         = false,
-	$ssl            = false,
-	$ssl_cert       = false,
-	
-	$nsswitch   = false,
-	$nss_passwd = false,
-	$nss_group  = false,
-	$nss_shadow = false,
-	
-	$pam            = false,
-	$pam_att_login  = 'uid',
-	$pam_att_member = 'member',
-	$pam_passwd     = 'md5',
-	$pam_filter     = 'objectClass=posixAccount',
-	
-	$enable_motd    = false,
-	$ensure         = present) {
+  $uri, 
+  $base,
+  $version        = '3',
+  $timelimit      = 30,
+  $bind_timelimit = 30,
+  $idle_timelimit = 60,
+  $binddn         = false,
+  $bindpw         = false,
+  $ssl            = false,
+  $ssl_cert       = false,
+    
+  $nsswitch   = false,
+  $nss_passwd = false,
+  $nss_group  = false,
+  $nss_shadow = false,
+    
+  $pam            = false,
+  $pam_att_login  = 'uid',
+  $pam_att_member = 'member',
+  $pam_passwd     = 'md5',
+  $pam_filter     = 'objectClass=posixAccount',
+    
+  $enable_motd    = false,
+  $ensure         = present) {
 
-	include ldap::params
+  include ldap::params
 
-	if($enable_motd) {
-		motd::register { 'ldap': }
-	}
+  if($enable_motd) {
+    motd::register { 'ldap': }
+  }
 
-	package { $ldap::params::package:
-		ensure => $ensure,
-	}
+  package { $ldap::params::package:
+    ensure => $ensure,
+  }
 
-	File {
-		ensure  => $ensure,
-		mode    => 0644,
-		owner   => $ldap::params::owner,
-		group   => $ldap::params::group,
-	}
+  File {
+    ensure  => $ensure,
+    mode    => 0644,
+    owner   => $ldap::params::owner,
+    group   => $ldap::params::group,
+  }
 
-	file { "${ldap::params::prefix}":
+  file { "${ldap::params::prefix}":
     ensure  => $ensure ? {
-                present => directory,
-                default => absent,
-              },
+                  present => directory,
+                  default => absent,
+                },
     require => Package[$ldap::params::package],
   }
 
-	file { "${ldap::params::prefix}/${ldap::params::config}":
-		content => template("ldap/${ldap::params::config}.erb"),
+  file { "${ldap::params::prefix}/${ldap::params::config}":
+    content => template("ldap/${ldap::params::config}.erb"),
     require => File[$ldap::params::prefix],
-	}
-	
-	if($ssl) {
-		if(!$ssl_cert) {
-			fail("When ssl is enabled you must define ssl_cert (filename)")
-		}
-		
-		# Set the certificate name from the uri.
-		#$cert_name = regsubst($uri, '/^([a-zA-Z0-9_-]+)(\..*)$/', '\1')
-		
-		file { "${ldap::params::cacertdir}/${ssl_cert}":
-			ensure => $ensure,
-			owner  => 'root',
-			group  => 'root',
-			mode   => 0640,
-			source => "puppet:///files/ldap/${ssl_cert}"
-		}
-		
-		# Create certificate hash file
-		exec { "Build cert hash":
-			command => "ln -s ${ldap::params::cacertdir}/${ssl_cert} ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::cacertdir}/${ssl_cert}).0",
-			unless  => "test -f ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::cacertdir}/${ssl_cert}).0",
-			require => File["${ldap::params::cacertdir}/${ssl_cert}"]
-		}
-	}
+  }
+    
+  if($ssl) {
+   
+    if(!$ssl_cert) {
+      fail("When ssl is enabled you must define ssl_cert (filename)")
+    }
+      
+    file { "${ldap::params::cacertdir}/${ssl_cert}":
+      ensure => $ensure,
+      owner  => 'root',
+      group  => 'root',
+      mode   => 0640,
+      source => "puppet:///files/ldap/${ssl_cert}"
+    }
+        
+    # Create certificate hash file
+    exec { "Build cert hash":
+      command => "ln -s ${ldap::params::cacertdir}/${ssl_cert} ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::cacertdir}/${ssl_cert}).0",
+      unless  => "test -f ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::cacertdir}/${ssl_cert}).0",
+      require => File["${ldap::params::cacertdir}/${ssl_cert}"]
+    }
+  }
 
-	# require module nsswitch
-	if($nsswitch == true) {
-		class { 'nsswitch':
-			uri         => $uri,
-			base        => $base,
-			module_type => $ensure ? {
-						'present' => 'ldap',
-						default   => 'none'
-					},
-		}
-	}
-	
-	# require module pam
-	if($pam == true) {
+  # require module nsswitch
+  if($nsswitch == true) {
+    class { 'nsswitch':
+      uri         => $uri,
+      base        => $base,
+      module_type => $ensure ? {
+                        'present' => 'ldap',
+                        default   => 'none'
+                      },
+    }
+  }
+    
+  # require module pam
+  if($pam == true) {
     Class ['pam::pamd'] -> Class['ldap']
-	}
+  }
+
 }
 
