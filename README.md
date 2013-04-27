@@ -94,6 +94,7 @@ Notes
 
 Ldap client configuration tested on:
  * Debian: 5.0   / 6.0
+ * Redhat: 5.x
 
 Requirements
 ------------
