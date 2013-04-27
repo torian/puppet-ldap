@@ -235,12 +235,7 @@ class ldap(
 	
 	# require module pam
 	if($pam == true) {
-		class { 'pam':
-			module_type => $ensure ? {
-					'present' => 'ldap',
-					default   => 'none'
-				},
-		}
+    Class ['pam::pamd'] -> Class['ldap']
 	}
 }
 
