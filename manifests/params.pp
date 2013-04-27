@@ -3,7 +3,7 @@ class ldap::params {
 
 	case $operatingsystem {
 	
-		'Debian': {
+		debian: {
 
 			$package   = [ 'ldap-utils' ]
 			
