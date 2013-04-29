@@ -58,54 +58,106 @@ class ldap::params {
 
     'Redhat': {
           
-    $package   = [ 'openldap', 'openldap-clients' ]
-          
-    $prefix    = '/etc/openldap'
-    $owner     = 'root'
-    $group     = 'root'
-    $config    = 'ldap.conf'
-    $cacertdir = '/etc/openldap/cacerts'
+      $package   = [ 'openldap', 'openldap-clients' ]
+            
+      $prefix    = '/etc/openldap'
+      $owner     = 'root'
+      $group     = 'root'
+      $config    = 'ldap.conf'
+      $cacertdir = '/etc/openldap/cacerts'
 
-    $server_package  = [ 'openldap-servers' ]
-    $server_config   = 'slapd.conf'
-    $service         = 'slapd'
-    $server_script   = 'slapd'
-    $server_pattern  = 'slapd'
-    $server_owner    = 'ldap'
-    $server_group    = 'ldap'
+      $server_package  = [ 'openldap-servers' ]
+      $server_config   = 'slapd.conf'
+      $service         = 'slapd'
+      $server_script   = 'slapd'
+      $server_pattern  = 'slapd'
+      $server_owner    = 'ldap'
+      $server_group    = 'ldap'
 
-    $schema_prefix   = "${prefix}/schema"
-    $db_prefix     = '/var/lib/ldap'
+      $schema_prefix   = "${prefix}/schema"
+      $db_prefix     = '/var/lib/ldap'
 
-    case $architecture {
-      /^x86_64/: { 
-        $module_prefix = '/usr/lib64/openldap'
+      case $architecture {
+        /^x86_64/: { 
+          $module_prefix = '/usr/lib64/openldap'
+        }
+
+        /^i?[346]86/: {
+          $module_prefix = '/usr/lib/openldap'
+        }
+
+        default: {
+          fail("Architecture not supported (${architecture})")
+        }
       }
 
-      /^i?[346]86/: {
-        $module_prefix = '/usr/lib/openldap'
-      }
-
-      default: {
-        fail("Architecture not supported (${architecture})")
-      }
+      $ssl_prefix    = '/etc/openldap/cacerts'
+      $server_run    = '/var/run/openldap'
+      $schema_base   = [ 'core', 'cosine', 'nis', 'inetorgperson', 'authldap' ]
+      $modules_base  = [ 'back_bdb' ]
+      $index_base    = [
+        'index objectclass  eq',
+        'index entryCSN     eq',
+        'index entryUUID    eq',
+        'index uidNumber    eq',
+        'index gidNumber    eq',
+        'index cn           pres,sub,eq',
+        'index sn           pres,sub,eq',
+        'index uid          pres,sub,eq',
+        'index displayName  pres,sub,eq',
+        ]
     }
 
-    $ssl_prefix    = '/etc/openldap/cacerts'
-    $server_run    = '/var/run/openldap'
-    $schema_base   = [ 'core', 'cosine', 'nis', 'inetorgperson', 'authldap' ]
-    $modules_base  = [ 'back_bdb' ]
-    $index_base    = [
-      'index objectclass  eq',
-      'index entryCSN     eq',
-      'index entryUUID    eq',
-      'index uidNumber    eq',
-      'index gidNumber    eq',
-      'index cn           pres,sub,eq',
-      'index sn           pres,sub,eq',
-      'index uid          pres,sub,eq',
-      'index displayName  pres,sub,eq',
-      ]
+    'OVS': {
+          
+      $package   = [ 'openldap', 'openldap-clients' ]
+            
+      $prefix    = '/etc/openldap'
+      $owner     = 'root'
+      $group     = 'root'
+      $config    = 'ldap.conf'
+      $cacertdir = '/etc/openldap/cacerts'
+
+      $server_package  = [ 'openldap-servers' ]
+      $server_config   = 'slapd.conf'
+      $service         = 'slapd'
+      $server_script   = 'slapd'
+      $server_pattern  = 'slapd'
+      $server_owner    = 'ldap'
+      $server_group    = 'ldap'
+
+      $schema_prefix   = "${prefix}/schema"
+      $db_prefix     = '/var/lib/ldap'
+
+      case $architecture {
+        /^x86_64/: { 
+          $module_prefix = '/usr/lib64/openldap'
+        }
+
+        /^i?[346]86/: {
+          $module_prefix = '/usr/lib/openldap'
+        }
+
+        default: {
+          fail("Architecture not supported (${architecture})")
+        }
+      }
+
+      $ssl_prefix    = '/etc/openldap/cacerts'
+      $server_run    = '/var/run/openldap'
+      $schema_base   = [ 'core', 'cosine', 'nis', 'inetorgperson', 'authldap' ]
+      $modules_base  = [ 'back_bdb' ]
+      $index_base    = [
+        'index objectclass  eq',
+        'index entryCSN     eq',
+        'index entryUUID    eq',
+        'index uidNumber    eq',
+        'index gidNumber    eq',
+        'index cn           pres,sub,eq',
+        'index sn           pres,sub,eq',
+        'index uid          pres,sub,eq',
+        'index displayName  pres,sub,eq',
+        ]
     }
 
     default:  {
