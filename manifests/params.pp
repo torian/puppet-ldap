@@ -160,6 +160,58 @@ class ldap::params {
         ]
     }
 
+    /(OpenSuSE|SLES)/: {
+      $package   = [ 'openldap2-client' ]
+            
+      $prefix    = '/etc/openldap'
+      $owner     = 'root'
+      $group     = 'root'
+      $config    = 'ldap.conf'
+      $cacertdir = '/etc/ssl/certs'
+
+      $server_package  = [ 'openldap2' ]
+      $server_config   = 'slapd.conf'
+      $service         = 'slapd'
+      $server_script   = 'slapd'
+      $server_pattern  = 'slapd'
+      $server_owner    = 'root'
+      $server_group    = 'ldap'
+
+      $schema_prefix   = "${prefix}/schema"
+      $db_prefix     = '/var/lib/ldap'
+
+      case $architecture {
+        /^x86_64/: { 
+          $module_prefix = '/usr/lib/openldap'
+        }
+
+        /^i?[346]86/: {
+          $module_prefix = '/usr/lib/openldap'
+        }
+
+        default: {
+          fail("Architecture not supported (${architecture})")
+        }
+      }
+
+      $ssl_prefix    = '/etc/openldap/cacerts'
+      $server_run    = '/var/run/openldap'
+      $schema_base   = [ 'core', 'cosine', 'nis', 'inetorgperson', 'authldap' ]
+      $modules_base  = [ 'back_bdb' ]
+      $index_base    = [
+        'index objectclass  eq',
+        'index entryCSN     eq',
+        'index entryUUID    eq',
+        'index uidNumber    eq',
+        'index gidNumber    eq',
+        'index cn           pres,sub,eq',
+        'index sn           pres,sub,eq',
+        'index uid          pres,sub,eq',
+        'index displayName  pres,sub,eq',
+        ]
+
+    }
+
     default:  {
       fail("Operating system ${::operatingsystem} not supported")
     }
