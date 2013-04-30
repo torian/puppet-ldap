@@ -1,6 +1,10 @@
 2013-04-29 - Version 0.1.5
  * Added support for OVS
- * Added support for OpenSuSE 12.x / SLES 11.x
+ * Added support for OpenSuSE 12.x / SLES 11.x for client configuration
+ * Added support for OpenSuSE 12.x / SLES 11.x for server configuration
+ * changed dependency for openldap service (requires slapd.conf)
+ * changed dependency for slapd.conf to require only the server package
+ * fixed duplicated directory management (ldap() and ldap::server::master())
 
 2013-04-27 - Version 0.1.4
  * pam / nss attributes are included into
