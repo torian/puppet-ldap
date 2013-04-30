@@ -155,20 +155,12 @@ class ldap::server::master(
     pattern    => $ldap::params::server_pattern,
     hasstatus  => true,
     hasrestart => true,
-    require    => Package[$ldap::params::server_package],
+    require    => [
+      Package[$ldap::params::server_package],
+      File["${ldap::params::prefix}/${ldap::params::server_config}"],
+      ]
   }
     
-  file { $ldap::params::prefix:
-    ensure  => $ensure ? {
-                  present => directory,
-                  default => absent
-                },
-    owner   => 'root',
-    group   => 'root',
-    mode    => 0755,
-    require => Package[$ldap::params::server_package],
-  }
-
   file { "${ldap::params::prefix}/${ldap::params::server_config}":
     ensure  => $ensure,
     mode    => 0640,
@@ -176,7 +168,7 @@ class ldap::server::master(
     group   => $ldap::params::server_group,
     content => template("ldap/${ldap::params::server_config}.erb"),
     notify  => Service[$ldap::params::service],
-    require => File[$ldap::params::prefix],
+    require => Package[$ldap::params::server_package],
   }
 
   #if($ssl == true) {

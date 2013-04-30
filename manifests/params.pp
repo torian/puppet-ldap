@@ -3,7 +3,7 @@ class ldap::params {
 
   case $operatingsystem {
     
-    debian: {
+    'Debian': {
 
       $package   = [ 'ldap-utils' ]
             
@@ -171,8 +171,8 @@ class ldap::params {
 
       $server_package  = [ 'openldap2' ]
       $server_config   = 'slapd.conf'
-      $service         = 'slapd'
-      $server_script   = 'slapd'
+      $service         = 'ldap'
+      $server_script   = 'ldap'
       $server_pattern  = 'slapd'
       $server_owner    = 'root'
       $server_group    = 'ldap'
@@ -194,9 +194,9 @@ class ldap::params {
         }
       }
 
-      $ssl_prefix    = '/etc/openldap/cacerts'
-      $server_run    = '/var/run/openldap'
-      $schema_base   = [ 'core', 'cosine', 'nis', 'inetorgperson', 'authldap' ]
+      $ssl_prefix    = '/etc/ssl/certs'
+      $server_run    = '/var/run/slapd'
+      $schema_base   = [ 'core', 'cosine', 'nis', 'inetorgperson', ]
       $modules_base  = [ 'back_bdb' ]
       $index_base    = [
         'index objectclass  eq',
