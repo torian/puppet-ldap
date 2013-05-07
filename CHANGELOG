@@ -1,3 +1,8 @@
+2013-05-07 - Version 0.2.0
+ * TLS/SSL works at ldap::server::master()
+ * generate server certificate hash
+ * Updated README.md
+
 2013-04-29 - Version 0.1.5
  * Added support for OVS
  * Added support for OpenSuSE 12.x / SLES 11.x for client configuration
