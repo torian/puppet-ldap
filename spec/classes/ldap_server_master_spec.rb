@@ -56,7 +56,6 @@ describe 'ldap::server::master' do
 			it { should include_class('ldap::params') }
 			it { should contain_service(oses[os][:service]) }
 			it { should contain_package(oses[os][:package]) }
-			it { should contain_file(oses[os][:prefix]) }
 			it { should contain_file(oses[os][:cfg]) }
 
 			context 'Motd disabled (default)' do
