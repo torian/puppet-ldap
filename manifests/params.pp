@@ -61,15 +61,15 @@ class ldap::params {
       $package   = [ 'openldap', 'openldap-clients' ]
             
       $prefix    = '/etc/openldap'
-      $owner     = 'root'
-      $group     = 'root'
+      $owner     = 'ldap'
+      $group     = 'ldap'
       $config    = 'ldap.conf'
       $cacertdir = '/etc/openldap/cacerts'
 
       $server_package  = [ 'openldap-servers' ]
       $server_config   = 'slapd.conf'
-      $service         = 'slapd'
-      $server_script   = 'slapd'
+      $service         = 'ldap'
+      $server_script   = 'ldap'
       $server_pattern  = 'slapd'
       $server_owner    = 'ldap'
       $server_group    = 'ldap'
@@ -93,8 +93,8 @@ class ldap::params {
 
       $ssl_prefix    = '/etc/openldap/cacerts'
       $server_run    = '/var/run/openldap'
-      $schema_base   = [ 'core', 'cosine', 'nis', 'inetorgperson', 'authldap' ]
-      $modules_base  = [ 'back_bdb' ]
+      $schema_base   = [ 'core', 'cosine', 'nis', 'inetorgperson', ]
+      $modules_base  = [ ]
       $index_base    = [
         'index objectclass  eq',
         'index entryCSN     eq',

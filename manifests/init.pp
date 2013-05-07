@@ -206,7 +206,7 @@ class ldap(
     file { "${ldap::params::cacertdir}/${ssl_cert}":
       ensure => $ensure,
       owner  => 'root',
-      group  => 'root',
+      group  => $ldap::params::group,
       mode   => 0640,
       source => "puppet:///files/ldap/${ssl_cert}"
     }

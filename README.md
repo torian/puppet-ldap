@@ -115,6 +115,7 @@ Notes
 -----
 
 Ldap client / server configuration tested on:
+
  * Debian:   5.0   / 6.0
  * Redhat:   5.x
  * OpenSuSe: 12.x
