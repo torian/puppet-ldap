@@ -56,7 +56,7 @@ rootpw		"<%= rootpw %>"
 #######################################################################
 # << Syncprov
 
-<% if syncprov == true then -%>
+<% if has_variable?('syncprov') and syncprov == true then -%>
 overlay syncprov
 syncprov-checkpoint <%= syncprov_checkpoint %>
 syncprov-sessionlog <%= syncprov_sessionlog %>
