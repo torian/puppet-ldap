@@ -1,4 +1,4 @@
-# == Class: ldap::master
+# == Class: ldap::server::master
 #
 # Puppet module to manage server configuration for
 # **OpenLdap**.
