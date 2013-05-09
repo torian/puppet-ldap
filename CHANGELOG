@@ -1,3 +1,7 @@
+2013-05-09 - Version 0.2.1
+ * ldap::server::slave() working
+ * template bugfix when called from ldap::server::slave()
+ 
 2013-05-07 - Version 0.2.0
  * TLS/SSL works at ldap::server::master()
  * generate server certificate hash

@@ -1,5 +1,5 @@
 name    'torian-ldap'
-version '0.2.0'
+version '0.2.1'
 source 'https://github.com/torian/puppet-ldap'
 author 'Emiliano Castagnari ecastag@gmail.com (aka Torian)'
 license 'Apache'

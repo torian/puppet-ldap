@@ -52,6 +52,13 @@ Enable nsswitch and pam configuration (requires both modules):
 
 #### Master server ####
 
+OpenLdap server as simple as it is:
+
+    class { 'ldap::server::master':
+      suffix      => 'dc=foo,dc=bar',
+      rootpw      => '{SHA}iEPX+SQWIR3p67lj/0zigSWTKHg=',
+    }
+
 Configure an OpenLdap master with syncrepl enabled:
 
     class { 'ldap::server::master':
@@ -73,15 +80,6 @@ With TLS/SSL enabled:
     class { 'ldap::server::master':
       suffix      => 'dc=foo,dc=bar',
       rootpw      => '{SHA}iEPX+SQWIR3p67lj/0zigSWTKHg=',
-      syncprov    => true,
-      sync_binddn => 'cn=sync,dc=foo,dc=bar',
-      modules_inc => [ 'syncprov' ],
-      schema_inc  => [ 'gosa/samba3', 'gosa/gosystem' ],
-      index_inc   => [
-        'index memberUid            eq',
-        'index mail                 eq',
-        'index givenName            eq,subinitial',
-        ],
       ssl         => true,
       ssl_ca      => 'ca.pem',
       ssl_cert    => 'master-ldap.pem',
@@ -136,7 +134,6 @@ TODO
 
  * ldap::server::master and ldap::server::slave do not copy
    the schemas specified by *index_inc*. It just adds an include to slapd
- * Add TLS/SSL support for ldap::server::slave
  * Need support for extending ACLs
 
 CopyLeft
