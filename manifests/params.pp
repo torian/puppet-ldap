@@ -14,7 +14,6 @@ class ldap::params {
       $cacertdir = '/etc/ssl/certs'
 
       $service         = 'slapd'
-      $server_script   = 'slapd'
       $server_pattern  = 'slapd'
       $server_package  = [ 'slapd' ]
       $server_config   = 'slapd.conf'
@@ -24,7 +23,7 @@ class ldap::params {
       $ssl_prefix      = '/etc/ssl/certs'
       $server_run      = '/var/run/openldap'
 
-      case $architecture {
+      case $::architecture {
         /^amd64/: { 
           $module_prefix = '/usr/lib64/ldap' 
         }
@@ -34,7 +33,7 @@ class ldap::params {
         }
 
         default: {
-          fail("Architecture not supported (${architecture})")
+          fail("Architecture not supported (${::architecture})")
         }
       }
 
@@ -68,8 +67,17 @@ class ldap::params {
 
       $server_package  = [ 'openldap-servers' ]
       $server_config   = 'slapd.conf'
-      $service         = 'ldap'
-      $server_script   = 'ldap'
+
+      case $::operatingsystemrelease {
+        /^5\./: {
+          $service         = 'ldap'
+        }
+
+        /^6\./: {
+          $service         = 'slapd'
+        }
+
+      }
       $server_pattern  = 'slapd'
       $server_owner    = 'ldap'
       $server_group    = 'ldap'
@@ -77,7 +85,7 @@ class ldap::params {
       $schema_prefix   = "${prefix}/schema"
       $db_prefix     = '/var/lib/ldap'
 
-      case $architecture {
+      case $::architecture {
         /^x86_64/: { 
           $module_prefix = '/usr/lib64/openldap'
         }
@@ -87,7 +95,7 @@ class ldap::params {
         }
 
         default: {
-          fail("Architecture not supported (${architecture})")
+          fail("Architecture not supported (${::architecture})")
         }
       }
 
@@ -121,7 +129,6 @@ class ldap::params {
       $server_package  = [ 'openldap-servers' ]
       $server_config   = 'slapd.conf'
       $service         = 'slapd'
-      $server_script   = 'slapd'
       $server_pattern  = 'slapd'
       $server_owner    = 'ldap'
       $server_group    = 'ldap'
@@ -129,7 +136,7 @@ class ldap::params {
       $schema_prefix   = "${prefix}/schema"
       $db_prefix     = '/var/lib/ldap'
 
-      case $architecture {
+      case $::architecture {
         /^x86_64/: { 
           $module_prefix = '/usr/lib64/openldap'
         }
@@ -139,7 +146,7 @@ class ldap::params {
         }
 
         default: {
-          fail("Architecture not supported (${architecture})")
+          fail("Architecture not supported (${::architecture})")
         }
       }
 
@@ -180,7 +187,7 @@ class ldap::params {
       $schema_prefix   = "${prefix}/schema"
       $db_prefix     = '/var/lib/ldap'
 
-      case $architecture {
+      case $::architecture {
         /^x86_64/: { 
           $module_prefix = '/usr/lib/openldap'
         }
@@ -190,7 +197,7 @@ class ldap::params {
         }
 
         default: {
-          fail("Architecture not supported (${architecture})")
+          fail("Architecture not supported (${::architecture})")
         }
       }
 

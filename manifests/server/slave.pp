@@ -126,9 +126,10 @@
 #
 #
 # == Tested/Works on:
-#   - Debian: 5.0   / 6.0   /
-#   - RHEL    5.2   / 5.4   / 5.5   / 6.1   / 6.2 
-#   - OVS:    2.1.1 / 2.1.5 / 2.2.0 / 3.0.2 /
+#   - Debian:    5.0   / 6.0   / 7.x
+#   - RHEL       5.x   / 6.x
+#   - OpenSuse:  11.x  / 12.x
+#   - OVS:       2.1.1 / 2.1.5 / 2.2.0 / 3.0.2 
 #
 #
 # === Examples
@@ -197,7 +198,6 @@ class ldap::server::slave(
   service { $ldap::params::service:
     ensure     => running,
     enable     => true,
-    name       => $ldap::params::server_script,
     pattern    => $ldap::params::server_pattern,
     require    => [
       Package[$ldap::params::server_package],
