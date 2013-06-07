@@ -4,7 +4,7 @@
 ###############################################################################
 
 #allow bind_v2
-<% if bind_anon == true then -%>
+<% if @bind_anon == true then -%>
 allow bind_anon_dn
 <% end -%>
 
@@ -22,19 +22,19 @@ pidfile         <%= scope.lookupvar('ldap::params::server_run') %>/slapd.pid
 argsfile        <%= scope.lookupvar('ldap::params::server_run') %>/slapd.args
 
 # Read slapd.conf(5) for possible values
-loglevel	<%= log_level %>
+loglevel	<%= @log_level %>
 
 modulepath	<%= scope.lookupvar('ldap::params::module_prefix') %>
 <% scope.lookupvar('ldap::params::modules_base').each do |mod| -%>
 moduleload	<%= mod %>
 <% end -%>
 
-<% modules_inc.each do |mod| -%>
+<% @modules_inc.each do |mod| -%>
 moduleload	<%= mod %>
 <% end -%>
 #moduleload	syncprov
 
-<% if ssl == true then -%>
+<% if @ssl == true then -%>
 TLSCACertificateFile   <%= scope.lookupvar('ldap::params::ssl_prefix') %>/<%= ssl_ca   %>
 TLSCertificateFile     <%= scope.lookupvar('ldap::params::ssl_prefix') %>/<%= ssl_cert %>
 TLSCertificateKeyFile  <%= scope.lookupvar('ldap::params::ssl_prefix') %>/<%= ssl_key  %>
@@ -48,15 +48,15 @@ backend		bdb
 
 # FIXME: puppet
 database	bdb
-suffix		"<%= suffix %>"
+suffix		"<%= @suffix %>"
 directory	<%= scope.lookupvar('ldap::params::db_prefix') %>
-rootdn		"<%= rootdn %>"
-rootpw		"<%= rootpw %>"
+rootdn		"<%= @rootdn %>"
+rootpw		"<%= @rootpw %>"
 
 #######################################################################
 # << Syncprov
 
-<% if has_variable?('syncprov') and syncprov == true then -%>
+<% if has_variable?('syncprov') and @syncprov == true then -%>
 overlay syncprov
 syncprov-checkpoint <%= syncprov_checkpoint %>
 syncprov-sessionlog <%= syncprov_sessionlog %>
@@ -91,29 +91,29 @@ dbconfig set_lk_max_lockers 1500
 
 lastmod		on
 
-<% if has_variable?('syncprov') and sync_binddn != false then -%>
+<% if has_variable?('syncprov') and @sync_binddn != false then -%>
 limits dn.exact="<%= sync_binddn%>" time.soft=unlimited time.hard=unlimited size.soft=unlimited size.hard=unlimited
 <% end -%>
 
 <% scope.lookupvar('ldap::params::index_base').each do |idx| -%>
-<%= idx %> 
+<%= idx %>
 <% end -%>
 
-<% index_inc.each do |idx| -%>
-<%= idx %> 
+<% @index_inc.each do |idx| -%>
+<%= idx %>
 <% end -%>
 
 # users can authenticate and change their password
-access to dn.subtree="<%= suffix %>" attrs=userPassword,shadowLastChange,
-<% if has_variable?('syncprov') and sync_binddn != false then -%>
+access to dn.subtree="<%= @suffix %>" attrs=userPassword,shadowLastChange,
+<% if has_variable?('syncprov') and @sync_binddn != false then -%>
 	by dn.exact="<%= sync_binddn %>" read
 <% end -%>
 	by self write
 	by anonymous auth
 	by * none
 
-#access to dn.subtree="<%= suffix %>" attrs=sambaNTPassword,sambaLMPassword,sambaPwdMustChange,sambaBadPasswordCount,sambaBadPasswordTime,sambaPwdLastSet
-#<% if has_variable?('syncprov') and sync_binddn != false then -%>
+#access to dn.subtree="<%= @suffix %>" attrs=sambaNTPassword,sambaLMPassword,sambaPwdMustChange,sambaBadPasswordCount,sambaBadPasswordTime,sambaPwdLastSet
+#<% if has_variable?('syncprov') and @sync_binddn != false then -%>
 #	by dn.exact="<%= sync_binddn %>" read
 #<% end -%>
 #	by self write
@@ -121,14 +121,14 @@ access to dn.subtree="<%= suffix %>" attrs=userPassword,shadowLastChange,
 #	by * none
 
 ## some attributes need to be readable anonymously so that 'id user' can answer correctly
-access to dn.subtree="<%= suffix %>" attrs=objectClass,entry,gecos,homeDirectory,uid,uidNumber,gidNumber,cn,memberUid
-<% if has_variable?('syncprov') and sync_binddn != false then -%>
+access to dn.subtree="<%= @suffix %>" attrs=objectClass,entry,gecos,homeDirectory,uid,uidNumber,gidNumber,cn,memberUid
+<% if has_variable?('syncprov') and @sync_binddn != false then -%>
 	by dn.exact="<%= sync_binddn %>" read
 <% end -%>
 	by * read
 
-access to dn.subtree="<%= suffix %>"
-<% if has_variable?('syncprov') and sync_binddn != false then -%>
+access to dn.subtree="<%= @suffix %>"
+<% if has_variable?('syncprov') and @sync_binddn != false then -%>
 	by dn.exact="<%= sync_binddn %>" read
 <% end -%>
 	by self read
