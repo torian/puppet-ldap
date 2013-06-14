@@ -3,7 +3,7 @@ class ldap::params {
 
   case $operatingsystem {
     
-    /(Debian|Ubuntu)/: {
+    /(?i:Debian|Ubuntu)/: {
 
       $package   = [ 'ldap-utils' ]
             
@@ -55,7 +55,7 @@ class ldap::params {
 
     }
 
-    /(Redhat|CentOS)/: {
+    /(?i:Redhat|CentOS)/: {
           
       $package   = [ 'openldap', 'openldap-clients' ]
             
@@ -116,7 +116,7 @@ class ldap::params {
         ]
     }
 
-    /OVS/: {
+    /(?i:OVS)/: {
           
       $package   = [ 'openldap', 'openldap-clients' ]
             
@@ -167,7 +167,7 @@ class ldap::params {
         ]
     }
 
-    /(OpenSuSE|SLES)/: {
+    /(?i:OpenSuSE|SLES)/: {
       $package   = [ 'openldap2-client' ]
             
       $prefix    = '/etc/openldap'
