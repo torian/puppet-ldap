@@ -1,3 +1,6 @@
+2013-06-14 - Version 0.2.3
+ * Added support for CentOS
+
 2013-05-28 - Version 0.2.2
  * Updated doc to reflect support for RHEL 6.x
  * Fixed service name on rhel (5.x = ldap / 6.x = slapd)

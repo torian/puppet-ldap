@@ -83,6 +83,7 @@
 # == Tested/Works on:
 #   - Debian:    5.0   / 6.0   / 7.x
 #   - RHEL       5.x   / 6.x
+#   - CentOS     5.x   / 6.x
 #   - OpenSuse:  11.x  / 12.x
 #   - OVS:       2.1.1 / 2.1.5 / 2.2.0 / 3.0.2 
 #
