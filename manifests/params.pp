@@ -55,7 +55,7 @@ class ldap::params {
 
     }
 
-    '/(Redhat|CentOS)/': {
+    /(Redhat|CentOS)/: {
           
       $package   = [ 'openldap', 'openldap-clients' ]
             
@@ -116,7 +116,7 @@ class ldap::params {
         ]
     }
 
-    'OVS': {
+    /OVS/: {
           
       $package   = [ 'openldap', 'openldap-clients' ]
             

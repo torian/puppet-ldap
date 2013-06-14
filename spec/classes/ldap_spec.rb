@@ -17,6 +17,13 @@ describe 'ldap' do
 			:ldapcfg   => '/etc/openldap/ldap.conf',
 			:cacertdir => '/etc/openldap/cacerts',
 			:ssl_cert  => 'ldap.pem',
+		},
+		'CentOS' => {
+			:arch      => 'x86_64',
+			:package   => 'openldap-clients',
+			:ldapcfg   => '/etc/openldap/ldap.conf',
+			:cacertdir => '/etc/openldap/cacerts',
+			:ssl_cert  => 'ldap.pem',
 		}
 	} 
 	
