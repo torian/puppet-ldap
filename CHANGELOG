@@ -1,5 +1,6 @@
-2013-06-14 - Version 0.2.3
+2013-06-24 - Version 0.2.3
  * Added support for CentOS
+ * Fixed rhel 5.x regression. ldap utils do not create ldap user. Revert it to root ownership
 
 2013-05-28 - Version 0.2.2
  * Updated doc to reflect support for RHEL 6.x
