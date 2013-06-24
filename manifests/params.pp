@@ -60,8 +60,6 @@ class ldap::params {
       $package   = [ 'openldap', 'openldap-clients' ]
             
       $prefix    = '/etc/openldap'
-      $owner     = 'ldap'
-      $group     = 'ldap'
       $config    = 'ldap.conf'
       $cacertdir = '/etc/openldap/cacerts'
 
@@ -70,11 +68,15 @@ class ldap::params {
 
       case $::operatingsystemrelease {
         /^5\./: {
-          $service         = 'ldap'
+          $service   = 'ldap'
+          $owner     = 'root'
+          $group     = 'root'
         }
 
         /^6\./: {
-          $service         = 'slapd'
+          $service   = 'slapd'
+          $owner     = 'ldap'
+          $group     = 'ldap'
         }
 
       }
