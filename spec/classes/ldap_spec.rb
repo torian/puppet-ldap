@@ -1,45 +1,27 @@
 
 require 'spec_helper'
 
+oses = @oses
+
 describe 'ldap' do
 
-	opts = {
-		'Debian' => {
-			:arch      => 'amd64',
-			:package   => 'ldap-utils',
-			:ldapcfg   => '/etc/ldap/ldap.conf',
-			:cacertdir => '/etc/ssl/certs',
-			:ssl_cert  => 'ldap.pem',
-		},
-		'Redhat' => {
-			:arch      => 'x86_64',
-			:package   => 'openldap-clients',
-			:ldapcfg   => '/etc/openldap/ldap.conf',
-			:cacertdir => '/etc/openldap/cacerts',
-			:ssl_cert  => 'ldap.pem',
-		},
-		'CentOS' => {
-			:arch      => 'x86_64',
-			:package   => 'openldap-clients',
-			:ldapcfg   => '/etc/openldap/ldap.conf',
-			:cacertdir => '/etc/openldap/cacerts',
-			:ssl_cert  => 'ldap.pem',
-		}
-	} 
-	
-	opts.keys.each do |os|
+	oses.keys.each do |os|
+
 		describe "Running on #{os}" do
+
 			let(:facts) { {
-				:operatingsystem => os,
-				:architecture    => opts[os][:arch],
+				:operatingsystem => oses[os][:operatingsystem],
+				:architecture    => oses[os][:architecture],
 			} }
+
 			let(:params) { { 
 				:uri  => 'ldap://ldap.example.com',
 				:base => 'dc=suffix',
 			} }
+      
 			it { should include_class('ldap::params') }
-			it { should contain_package(opts[os][:package]) }
-			it { should contain_file(opts[os][:ldapcfg]) }
+			it { should contain_package(oses[os][:utils_pkg]) }
+			it { should contain_file(oses[os][:utils_cfg]) }
 
 			context 'Motd disabled (default)' do
 				it { should_not contain_motd__register('ldap') }
@@ -58,9 +40,9 @@ describe 'ldap' do
 					:uri      => 'ldap://ldap.example.com',
 					:base     => 'dc=suffix',
 					:ssl      => true,
-					:ssl_cert => opts[os][:ssl_cert],
+					:ssl_cert => oses[os][:ssl_cert],
 				} }
-				it { should contain_file("#{opts[os][:cacertdir]}/#{opts[os][:ssl_cert]}") } 
+				it { should contain_file("#{oses[os][:cacertdir]}/#{oses[os][:ssl_cert]}") } 
 			end
 
 			context 'SSL Enabled without certificate' do
@@ -70,10 +52,14 @@ describe 'ldap' do
 					:ssl      => true,
 				} }
 				it { expect {
-					should contain_file("#{opts[os][:cacertdir]}/#{opts[os][:ssl_cert]}") 
+					should contain_file("#{oses[os][:cacertdir]}/#{oses[os][:ssl_cert]}") 
 					}.to raise_error(Puppet::Error, /^When ssl is.*/)
 				}
+
 			end
+
 		end
+
 	end
+
 end
