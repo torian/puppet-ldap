@@ -257,9 +257,15 @@ class ldap::server::slave(
 
     # Create certificate hash file
     exec { "Server certificate hash":
-      command => "ln -s ${ldap::params::ssl_prefix}/${ssl_cert} ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::ssl_prefix}/${ssl_cert}).0",
-      unless  => "test -f ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::ssl_prefix}/${ssl_cert}).0",
-      require => File['ssl_cert']
+      command  => "ln -s ${ldap::params::ssl_prefix}/${ssl_cert} ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::ssl_prefix}/${ssl_cert}).0",
+      unless   => "test -f ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::ssl_prefix}/${ssl_cert}).0",
+      provider => $::puppetversion ? {
+                    /^3./   => 'shell',
+                    /^2.7/  => 'shell',
+                    /^2.6/  => 'posix',
+                    default => 'posix'
+                  },
+      require  => File['ssl_cert']
     }
     
   }
