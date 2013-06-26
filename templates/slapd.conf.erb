@@ -35,9 +35,9 @@ moduleload	<%= mod %>
 #moduleload	syncprov
 
 <% if @ssl == true then -%>
-TLSCACertificateFile   <%= scope.lookupvar('ldap::params::ssl_prefix') %>/<%= ssl_ca   %>
-TLSCertificateFile     <%= scope.lookupvar('ldap::params::ssl_prefix') %>/<%= ssl_cert %>
-TLSCertificateKeyFile  <%= scope.lookupvar('ldap::params::ssl_prefix') %>/<%= ssl_key  %>
+TLSCACertificateFile   <%= scope.lookupvar('ldap::params::ssl_prefix') %>/<%= @ssl_ca   %>
+TLSCertificateFile     <%= scope.lookupvar('ldap::params::ssl_prefix') %>/<%= @ssl_cert %>
+TLSCertificateKeyFile  <%= scope.lookupvar('ldap::params::ssl_prefix') %>/<%= @ssl_key  %>
 #TLSVerifyClient        allow
 <% end -%>
 
@@ -58,25 +58,25 @@ rootpw		"<%= @rootpw %>"
 
 <% if has_variable?('syncprov') and @syncprov == true then -%>
 overlay syncprov
-syncprov-checkpoint <%= syncprov_checkpoint %>
-syncprov-sessionlog <%= syncprov_sessionlog %>
+syncprov-checkpoint <%= @syncprov_checkpoint %>
+syncprov-sessionlog <%= @syncprov_sessionlog %>
 <% end -%>
 
 <% if has_variable?('sync_rid') then -%>
-syncrepl rid=<%= sync_rid %>
-	provider=<%= sync_provider %>
-	type=<%= sync_type %>
-	interval=<%= sync_interval %>
-	searchbase="<% if sync_base == '' then %><%= suffix %><% else %><%= sync_base %><% end %>"
-	filter="<%= sync_filter %>"
-	attrs="<%= sync_attrs %>"
-	scope=<%= sync_scope %>
+syncrepl rid=<%= @sync_rid %>
+	provider=<%= @sync_provider %>
+	type=<%= @sync_type %>
+	interval=<%= @sync_interval %>
+	searchbase="<% if @sync_base == '' then %><%= @suffix %><% else %><%= @sync_base %><% end %>"
+	filter="<%= @sync_filter %>"
+	attrs="<%= @sync_attrs %>"
+	scope=<%= @sync_scope %>
 	schemachecking=off
 	bindmethod=simple
-	binddn="<%= sync_binddn %>"
-	credentials="<%= sync_bindpw %>"
+	binddn="<%= @sync_binddn %>"
+	credentials="<%= @sync_bindpw %>"
 
-updateref <%= sync_provider %>
+updateref <%= @sync_provider %>
 <% end -%>
 
 #######################################################################
@@ -91,8 +91,8 @@ dbconfig set_lk_max_lockers 1500
 
 lastmod		on
 
-<% if has_variable?('syncprov') and @sync_binddn != false then -%>
-limits dn.exact="<%= sync_binddn%>" time.soft=unlimited time.hard=unlimited size.soft=unlimited size.hard=unlimited
+<% if @syncprov and @sync_binddn != false then -%>
+limits dn.exact="<%= @sync_binddn%>" time.soft=unlimited time.hard=unlimited size.soft=unlimited size.hard=unlimited
 <% end -%>
 
 <% scope.lookupvar('ldap::params::index_base').each do |idx| -%>
@@ -105,16 +105,16 @@ limits dn.exact="<%= sync_binddn%>" time.soft=unlimited time.hard=unlimited size
 
 # users can authenticate and change their password
 access to dn.subtree="<%= @suffix %>" attrs=userPassword,shadowLastChange,
-<% if has_variable?('syncprov') and @sync_binddn != false then -%>
-	by dn.exact="<%= sync_binddn %>" read
+<% if @syncprov and @sync_binddn != false then -%>
+	by dn.exact="<%= @sync_binddn %>" read
 <% end -%>
 	by self write
 	by anonymous auth
 	by * none
 
 #access to dn.subtree="<%= @suffix %>" attrs=sambaNTPassword,sambaLMPassword,sambaPwdMustChange,sambaBadPasswordCount,sambaBadPasswordTime,sambaPwdLastSet
-#<% if has_variable?('syncprov') and @sync_binddn != false then -%>
-#	by dn.exact="<%= sync_binddn %>" read
+#<% if @syncprov and @sync_binddn != false then -%>
+#	by dn.exact="<%= @sync_binddn %>" read
 #<% end -%>
 #	by self write
 #	by anonymous auth
@@ -122,14 +122,14 @@ access to dn.subtree="<%= @suffix %>" attrs=userPassword,shadowLastChange,
 
 ## some attributes need to be readable anonymously so that 'id user' can answer correctly
 access to dn.subtree="<%= @suffix %>" attrs=objectClass,entry,gecos,homeDirectory,uid,uidNumber,gidNumber,cn,memberUid
-<% if has_variable?('syncprov') and @sync_binddn != false then -%>
-	by dn.exact="<%= sync_binddn %>" read
+<% if @syncprov and @sync_binddn != false then -%>
+	by dn.exact="<%= @sync_binddn %>" read
 <% end -%>
 	by * read
 
 access to dn.subtree="<%= @suffix %>"
-<% if has_variable?('syncprov') and @sync_binddn != false then -%>
-	by dn.exact="<%= sync_binddn %>" read
+<% if @syncprov and @sync_binddn != false then -%>
+	by dn.exact="<%= @sync_binddn %>" read
 <% end -%>
 	by self read
 	by * read
