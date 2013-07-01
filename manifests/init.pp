@@ -181,7 +181,7 @@ class ldap(
 
   File {
     ensure  => $ensure,
-    mode    => 0644,
+    mode    => '0644',
     owner   => $ldap::params::owner,
     group   => $ldap::params::group,
   }
@@ -209,7 +209,7 @@ class ldap(
       ensure => $ensure,
       owner  => 'root',
       group  => $ldap::params::group,
-      mode   => 0640,
+      mode   => '0644',
       source => "puppet:///files/ldap/${ssl_cert}"
     }
         
