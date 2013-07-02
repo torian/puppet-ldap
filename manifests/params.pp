@@ -76,8 +76,8 @@ class ldap::params {
 
         /^6\./: {
           $service   = 'slapd'
-          $owner     = 'ldap'
-          $group     = 'ldap'
+          $owner     = 'root'
+          $group     = 'root'
           $cacertdir = '/etc/openldap/certs'
           $ssl_prefix = '/etc/openldap/certs'
         }
