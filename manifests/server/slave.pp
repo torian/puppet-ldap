@@ -207,7 +207,7 @@ class ldap::server::slave(
   }
  
   File {
-    mode    => 0640,
+    mode    => '0640',
     owner   => $ldap::params::server_owner,
     group   => $ldap::params::server_group,
   }
@@ -239,6 +239,7 @@ class ldap::server::slave(
       ensure  => present,
       source  => "puppet:///files/ldap/${ssl_ca}",
       path    => "${ldap::params::ssl_prefix}/${ssl_ca}",
+      mode    => '0644',
     }
 
     if(!$ssl_cert) { fail("${msg_prefix} ssl_cert ${msg_suffix}") }
@@ -246,6 +247,7 @@ class ldap::server::slave(
       ensure  => present,
       source  => "puppet:///files/ldap/${ssl_cert}",
       path    => "${ldap::params::ssl_prefix}/${ssl_cert}",
+      mode    => '0644',
     }
 
     if(!$ssl_key) { fail("${msg_prefix} ssl_key ${msg_suffix}") }
