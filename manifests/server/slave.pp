@@ -44,7 +44,7 @@
 #    Some schemas are already included (ldap::params::schemas_base)
 #    'core', 'cosine', 'nis', 'inetorgperson'
 #    *Optional* (defaults to [])
-#    
+#
 #  [modules_inc]
 #    Array of modules that you want to load. Depends on the ditro being used.
 #    Some modules are already included through ldap::params::modules_base
@@ -63,64 +63,64 @@
 #         'index uid          pres,sub,eq',
 #         'index displayName  pres,sub,eq',
 #    *Optional* (defaults to [])
-#    
+#
 #  [log_level]
 #    OpenLdap server log level.
 #    *Optional* (defaults to 0)
-#    
+#
 #  [bind_anon]
 #    Allow anonymous binding
 #    *Optional* (defaults to true)
-#    
+#
 #  [ssl]
 #    Enable SSL/TLS.
 #    *Requires*: ssl_{cert,ca,key} parameter
 #    *Optional* (defaults to false)
-#    
+#
 #  [ssl_cert]
 #    Public certificate filename (should be located at puppet:///files/ldap)
 #    *Requires*: ssl => true
 #    *Optional* (defaults to false)
-#    
+#
 #  [ssl_ca]
 #    CA certificate filename (should be located at puppet:///files/ldap)
 #    *Requires*: ssl => true
 #    *Optional* (defaults to false)
-#    
+#
 #  [ssl_key]
 #    Private certificate filename (should be located at puppet:///files/ldap)
 #    *Requires*: ssl => true
 #    *Optional* (defaults to false)
-#    
+#
 #  [sync_type]
 #    Content synchronizatin protocol type (refreshOnly / refreshAndPersist)
 #    *Optional* (defaults to refreshOnly)
-#    
+#
 #  [sync_interval]
 #    Synchronization interval.
 #    *Optional* (defaults to 00:00:10:00)
-#    
+#
 #  [sync_base]
 #    Base for replication
 #    *Optional* (defaults to '')
-#    
+#
 #  [sync_filter]
 #    Filter to use when fetching content.
 #    *Optional* (defaults to '(ObjectClass=*)')
-#   
+#
 #  [sync_attrs]
 #    Attributes to synchronize.
 #    *Optional* (defaults to '*')
-#    
+#
 #  [sync_scope]
-#    Objects search depth. 
+#    Objects search depth.
 #    *Optional* (defaults to 'sub')
-#    
+#
 #  [enable_motd]
 #    Use motd to report the usage of this module.
 #    *Requires*: https://github.com/torian/puppet-motd.git
 #    *Optional* (defaults to false)
-#    
+#
 #  [ensure]
 #    *Optional* (defaults to 'present')
 #
@@ -130,24 +130,24 @@
 #   - RHEL       5.x   / 6.x
 #   - CentOS     5.x   / 6.x
 #   - OpenSuse:  11.x  / 12.x
-#   - OVS:       2.1.1 / 2.1.5 / 2.2.0 / 3.0.2 
+#   - OVS:       2.1.1 / 2.1.5 / 2.2.0 / 3.0.2
 #
 #
 # === Examples
 #
 # class { 'ldap::server::master':
-#	suffix      => 'dc=foo,dc=bar',
-#	rootpw      => '{SHA}iEPX+SQWIR3p67lj/0zigSWTKHg=',
-#	syncprov    => true,
-#	sync_binddn => 'cn=sync,dc=foo,dc=bar',
-#	modules_inc => [ 'syncprov' ],
-#	schema_inc  => [ 'gosa/samba3', 'gosa/gosystem' ],
-#	index_inc   => [
-#		'index memberUid            eq',
-#		'index mail                 eq',
-#		'index givenName            eq,subinitial',
-#		],
-#	}
+#  suffix      => 'dc=foo,dc=bar',
+#  rootpw      => '{SHA}iEPX+SQWIR3p67lj/0zigSWTKHg=',
+#  syncprov    => true,
+#  sync_binddn => 'cn=sync,dc=foo,dc=bar',
+#  modules_inc => [ 'syncprov' ],
+#  schema_inc  => [ 'gosa/samba3', 'gosa/gosystem' ],
+#  index_inc   => [
+#  'index memberUid            eq',
+#    'index mail                 eq',
+#    'index givenName            eq,subinitial',
+#    ],
+#  }
 #
 # === Authors
 #
@@ -205,13 +205,13 @@ class ldap::server::slave(
       File["${ldap::params::prefix}/${ldap::params::server_config}"],
       ]
   }
- 
+
   File {
     mode    => '0640',
     owner   => $ldap::params::server_owner,
     group   => $ldap::params::server_group,
   }
-  
+
   file { "${ldap::params::prefix}/${ldap::params::server_config}":
     ensure  => $ensure,
     content => template("ldap/${ldap::params::server_config}.erb"),
@@ -258,7 +258,7 @@ class ldap::server::slave(
     }
 
     # Create certificate hash file
-    exec { "Server certificate hash":
+    exec { 'Server certificate hash':
       command  => "ln -s ${ldap::params::ssl_prefix}/${ssl_cert} ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::ssl_prefix}/${ssl_cert}).0",
       unless   => "test -f ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::ssl_prefix}/${ssl_cert}).0",
       provider => $::puppetversion ? {
@@ -269,7 +269,7 @@ class ldap::server::slave(
                   },
       require  => File['ssl_cert']
     }
-    
+
   }
 
 }

@@ -2,11 +2,11 @@
 class ldap::params {
 
   case $::osfamily {
-    
+
     'Debian' : {
 
       $package   = [ 'ldap-utils' ]
-            
+
       $prefix    = '/etc/ldap'
       $owner     = 'root'
       $group     = 'root'
@@ -24,8 +24,8 @@ class ldap::params {
       $server_run      = '/var/run/openldap'
 
       case $::architecture {
-        /^amd64/: { 
-          $module_prefix = '/usr/lib64/ldap' 
+        /^amd64/: {
+          $module_prefix = '/usr/lib64/ldap'
         }
 
         /^i?[346]86/: {
@@ -38,7 +38,7 @@ class ldap::params {
       }
 
       $modules_base  = [ 'back_bdb' ]
-            
+
       $schema_prefix   = "${prefix}/schema"
       $schema_base     = [ 'core', 'cosine', 'nis', 'inetorgperson', ]
       $index_base      = [
@@ -56,9 +56,9 @@ class ldap::params {
     }
 
     'RedHat' : {
-          
+
       $package   = [ 'openldap', 'openldap-clients' ]
-            
+
       $prefix    = '/etc/openldap'
       $owner     = 'root'
       $group     = 'root'
@@ -89,7 +89,7 @@ class ldap::params {
       $db_prefix     = '/var/lib/ldap'
 
       case $::architecture {
-        /^x86_64/: { 
+        /^x86_64/: {
           $module_prefix = '/usr/lib64/openldap'
         }
 
@@ -103,7 +103,7 @@ class ldap::params {
       }
 
       case $::operatingsystem {
-        
+
         /(?i:OVS)/ : {
           $schema_base   = [ 'core', 'cosine', 'nis', 'inetorgperson', 'authldap' ]
           $modules_base  = [ 'back_bdb' ]
@@ -132,7 +132,7 @@ class ldap::params {
 
     'Suse' : {
       $package   = [ 'openldap2-client' ]
-            
+
       $prefix    = '/etc/openldap'
       $owner     = 'root'
       $group     = 'root'
@@ -151,7 +151,7 @@ class ldap::params {
       $db_prefix     = '/var/lib/ldap'
 
       case $::architecture {
-        /^x86_64/: { 
+        /^x86_64/: {
           $module_prefix = '/usr/lib/openldap'
         }
 
