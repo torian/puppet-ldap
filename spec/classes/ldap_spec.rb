@@ -10,7 +10,7 @@ describe 'ldap' do
 		describe "Running on #{os}" do
 
 			let(:facts) { {
-				:operatingsystem => oses[os][:operatingsystem],
+				:osfamily => oses[os][:osfamily],
 				:architecture    => oses[os][:architecture],
 			} }
 

@@ -10,7 +10,7 @@ describe 'ldap::server::master' do
 		describe "Running on #{os}" do
 
       let(:facts) { { 
-        :operatingsystem => oses[os][:operatingsystem],
+        :osfamily => oses[os][:osfamily],
         :architecture    => oses[os][:architecture],
       } }
     
@@ -40,7 +40,7 @@ describe 'ldap::server::master' do
 	end
 	
 	describe "Running on unsupported OS" do
-		let(:facts) { { :operatingsystem => 'solaris' } }
+		let(:facts) { { :osfamily => 'solaris' } }
 		let(:params) { { 
 			:suffix => 'dc=example,dc=com',
 			:rootpw => 'asdqw',
