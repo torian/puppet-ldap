@@ -91,7 +91,7 @@ end
 
     :utils_pkg   => 'openldap-clients',
     :utils_cfg   => '/etc/openldap/ldap.conf',
-    :cacertdir   => '/etc/openldap/cacerts',
+    :cacertdir   => '/etc/openldap/certs',
     :ssl_cert    => 'ldap.pem',
     :utils_owner => 'ldap',
     :utils_group => 'ldap',
@@ -104,13 +104,13 @@ end
     :service       => 'slapd',
   },
 
-  'CentOS' => {
+  'CentOS 5' => {
     :operatingsystem            => 'CentOS',
     :osfamily                   => 'Redhat',
-    :operatingsystemrelease     => '6.0',
-    :operatingsystemmajrelease  => '6',
+    :operatingsystemrelease     => '5.0',
+    :operatingsystemmajrelease  => '5',
     :lsbdistid                  => 'CentOS',
-    :lsbdistrelease             => '6.0',
+    :lsbdistrelease             => '5.0',
     :architecture               => 'x86_64',
 
     :utils_pkg   => 'openldap-clients',
@@ -127,7 +127,32 @@ end
     :server_group  => 'ldap',
     :service       => 'ldap',
   },
-  'Scientific Linux' => {
+
+  'CentOS 6' => {
+    :operatingsystem            => 'CentOS',
+    :osfamily                   => 'Redhat',
+    :operatingsystemrelease     => '6.0',
+    :operatingsystemmajrelease  => '6',
+    :lsbdistid                  => 'CentOS',
+    :lsbdistrelease             => '6.0',
+    :architecture               => 'x86_64',
+
+    :utils_pkg   => 'openldap-clients',
+    :utils_cfg   => '/etc/openldap/ldap.conf',
+    :cacertdir   => '/etc/openldap/certs',
+    :ssl_cert    => 'ldap.pem',
+    :utils_owner => 'root',
+    :utils_group => 'root',
+
+    :server_pkg    => 'openldap-servers',
+    :server_prefix => '/etc/openldap',
+    :server_cfg    => '/etc/openldap/slapd.conf',
+    :server_owner  => 'ldap',
+    :server_group  => 'ldap',
+    :service       => 'slapd',
+  },
+
+  'Scientific Linux 6' => {
     :operatingsystem            => 'Scientific',
     :osfamily                   => 'Redhat',
     :operatingsystemrelease     => '6.0',
@@ -138,7 +163,7 @@ end
 
     :utils_pkg   => 'openldap-clients',
     :utils_cfg   => '/etc/openldap/ldap.conf',
-    :cacertdir   => '/etc/openldap/cacerts',
+    :cacertdir   => '/etc/openldap/certs',
     :ssl_cert    => 'ldap.pem',
     :utils_owner => 'root',
     :utils_group => 'root',
@@ -148,7 +173,7 @@ end
     :server_cfg    => '/etc/openldap/slapd.conf',
     :server_owner  => 'ldap',
     :server_group  => 'ldap',
-    :service       => 'ldap',
+    :service       => 'slapd',
   },
 
 }

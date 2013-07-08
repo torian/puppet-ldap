@@ -10,8 +10,10 @@ describe 'ldap::server::master' do
 		describe "Running on #{os}" do
 
       let(:facts) { { 
-        :osfamily => oses[os][:osfamily],
-        :architecture    => oses[os][:architecture],
+				:osfamily                  => oses[os][:osfamily],
+				:operatingsystem           => oses[os][:operatingsystem],
+				:operatingsystemmajrelease => oses[os][:operatingsystemmajrelease],
+				:architecture              => oses[os][:architecture],
       } }
     
       let(:params) { { 
