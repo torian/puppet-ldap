@@ -283,15 +283,11 @@ class ldap::server::slave(
       class { 'ldap::server::redhat': ssl => $ssl }
     }
 
-    #'suse': {
+    #'Suse' : {
     #  class { 'ldap::server::suse':   ssl => $ssl }
     #}
 
-    default : {
-      fail("Operating system ${::operatingsystem} (${::osfamily}) not supported")
-    }
   }
-
 
 }
 
