@@ -114,11 +114,17 @@ Notes
 
 Ldap client / server configuration tested on:
 
- * Debian:   5.0   / 6.0
+ * Debian:   5     / 6   / 7
  * Redhat:   5.x   / 6.x
  * CentOS:   5.x   / 6.x
  * OpenSuSe: 12.x
  * SLES:     11.x
+
+Should also work on (I'd appreciate reports on this distros and versions):
+
+ * Ubuntu
+ * Fedora
+ * Scientific Linux 6
 
 Requirements
 ------------

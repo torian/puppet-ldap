@@ -1,10 +1,14 @@
-2013-07-08 - Version 0.2.3
+2013-07-11 - Version 0.2.3
  * Added support for CentOS
  * Fixed rhel 5.x regression. ldap utils do not create ldap user. Revert it to root ownership
  * @pronix commit: Use correct variable reference in templates (@)
  * @rhysrhaven commit to fix exec (ldap::server::master/slave) behavior on puppet 3.x
  * revert ownership of ldap.conf due to a problem on rhel6.3
  * @Spredzy commit: replaced $::operatingsystem by $::osfamily
+ * Added rc scripts configuration files for debian & redhat (/etc/{default,sysconfig})
+ * Bugfix #7: Debian created slapd.d means managed slapd.conf is ignored
+ * Bugfix: Debian - Server modules dir is set to /usr/lib/modules, not /usr/lib64/modules,
+    except for Lenny.
 
 2013-05-28 - Version 0.2.2
  * Updated doc to reflect support for RHEL 6.x
