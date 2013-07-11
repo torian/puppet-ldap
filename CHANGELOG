@@ -1,3 +1,6 @@
+2013-07-11 - Version 0.2.4
+ * Fixed misplaced fail() on ldap::server::slave
+
 2013-07-11 - Version 0.2.3
  * Added support for CentOS
  * Fixed rhel 5.x regression. ldap utils do not create ldap user. Revert it to root ownership
