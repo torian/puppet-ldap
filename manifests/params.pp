@@ -23,18 +23,30 @@ class ldap::params {
       $ssl_prefix      = '/etc/ssl/certs'
       $server_run      = '/var/run/openldap'
 
-      case $::architecture {
-        /^amd64/: {
-          $module_prefix = '/usr/lib64/ldap'
+      case $::operatingsystemmajrelease {
+        5 : {
+
+          case $::architecture {
+            /^amd64/: {
+              $module_prefix = '/usr/lib64/ldap'
+            }
+
+            /^i?[346]86/: {
+              $module_prefix = '/usr/lib/ldap'
+            }
+
+            default: {
+              fail("Architecture not supported (${::architecture})")
+            }
+
+          }
+
         }
 
-        /^i?[346]86/: {
-          $module_prefix = '/usr/lib32/ldap'
+        default : {
+              $module_prefix = '/usr/lib/ldap'
         }
 
-        default: {
-          fail("Architecture not supported (${::architecture})")
-        }
       }
 
       $modules_base  = [ 'back_bdb' ]

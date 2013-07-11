@@ -1,0 +1,31 @@
+###############################################################################
+# << FILE MANAGED BY PUPPET >>
+# Manual changes are likey to be overwritten
+###############################################################################
+
+<% if @operatingsystemmajrelease == '5' -%>
+# How long to wait between sending slapd TERM and KILL
+# signals when stopping slapd by init script
+# - format is the same as used when calling sleep
+STOP_DELAY=3s
+
+# Parameters to ulimit called right before starting slapd
+# - use this to change system limits for slapd
+ULIMIT_SETTINGS=
+
+<% elsif @operatingsystemmajrelease == '6' -%>
+# Maximum allowed time to wait for slapd shutdown on 'service ldap stop' (in seconds)
+#SLAPD_SHUTDOWN_TIMEOUT=3
+
+# Parameters to ulimit, use to change system limits for slapd
+#SLAPD_ULIMIT_SETTINGS=""
+
+<% end -%>
+
+# By default only listening on ldap:/// is turned on.
+# If you want to change listening options for slapd,
+# set following three variables to yes or no
+SLAPD_LDAP=yes
+SLAPD_LDAPS=<% if @ssl -%>yes<% else %>no<% end %>
+SLAPD_LDAPI=no
+
