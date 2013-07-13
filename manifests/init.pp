@@ -223,7 +223,7 @@ class ldap(
   }
 
   if($sudoers_base) {
-    if(! $sudoers_search) {
+    if(! $sudoers_filter) {
       fail('If sudoers_base attribute is set, you must define sudoers_filter')
     }
   }
