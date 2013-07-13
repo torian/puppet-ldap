@@ -283,7 +283,7 @@ class ldap::server::slave(
       class { 'ldap::server::redhat': ssl => $ssl }
     }
 
-    #'suse': {
+    #'Suse': {
     #  class { 'ldap::server::suse':   ssl => $ssl }
     #}
 
