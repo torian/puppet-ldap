@@ -87,6 +87,29 @@
 #    Filter to use when retrieving user information
 #    *Optional* (defaults to *'objectClass=posixAccount'*)
 #
+#  [sudoers_base]
+#    The DN (parameter $base is appended) to use when performing sudo
+#    LDAP queries. Typically this is of the form ou=SUDOers,dc=example,dc=com
+#    for the domain example.com.
+#    *Optional* (defaults to false)
+#
+#  [sudoers_filter]
+#    An LDAP filter which is used to restrict the set of records returned when
+#    performing a sudo LDAP query. Typically, this is of the form attribute=value
+#    or (&(attribute=value)(attribute2=value2)).
+#    *Optional* (defaults to false)
+#
+#  [sudoers_timed]
+#    Whether or not to evaluate the sudoNotBefore and sudoNotAfter attributes
+#    that implement time-dependent sudoers entries.
+#    *Optional* (defaults to false)
+#
+#  [sudoers_debug]
+#    This sets the debug level for sudo LDAP queries. Debugging information
+#    is printed to the standard error.
+#    Should not be set on production environments
+#    *Optional* (defaults to 0)
+#
 #  [enable_motd]
 #    Use motd to report the usage of this module.
 #    *Requires*: https://github.com/torian/puppet-motd.git
@@ -166,6 +189,11 @@ class ldap(
   $pam_passwd     = 'md5',
   $pam_filter     = 'objectClass=posixAccount',
 
+  $sudoers_base   = false,
+  $sudoers_filter = false,
+  $sudoers_timed  = false,
+  $sudoers_debug  = 0,
+
   $enable_motd    = false,
   $ensure         = present) {
 
@@ -192,6 +220,12 @@ class ldap(
                   default => absent,
                 },
     require => Package[$ldap::params::package],
+  }
+
+  if($sudoers_base) {
+    if(! $sudoers_filter) {
+      fail('If sudoers_base attribute is set, you must define sudoers_filter')
+    }
   }
 
   file { "${ldap::params::prefix}/${ldap::params::config}":
