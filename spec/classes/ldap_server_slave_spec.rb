@@ -53,6 +53,7 @@ describe 'ldap::server::slave' do
           :sync_updatedn => 'cn=admin,dc=example,dc=com',
           :sync_binddn   => 'cn=sync,dc=example,dc=com',
           :sync_bindpw   => 'password',
+          :enable_motd   => true,
         } }
    
 				it { should contain_motd__register('ldap::server::slave') }
