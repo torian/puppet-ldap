@@ -262,7 +262,8 @@ class ldap(
     exec { 'Build cert hash':
       command => "ln -s ${ldap::params::cacertdir}/${ssl_cert} ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::cacertdir}/${ssl_cert}).0",
       unless  => "test -f ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::cacertdir}/${ssl_cert}).0",
-      require => File["${ldap::params::cacertdir}/${ssl_cert}"]
+      require => File["${ldap::params::cacertdir}/${ssl_cert}"],
+      path    => [ "/bin", "/usr/bin", "/sbin", "/usr/sbin" ]
     }
   }
 
