@@ -239,12 +239,23 @@ class ldap(
       fail('When ssl is enabled you must define ssl_cert (filename)')
     }
 
-    file { "${ldap::params::cacertdir}/${ssl_cert}":
-      ensure => $ensure,
+    file { $ldap::params::cacertdir:
+      ensure => $ensure ? {
+                  present => directory,
+                  default => absent
+                },
       owner  => 'root',
-      group  => $ldap::params::group,
-      mode   => '0644',
-      source => "puppet:///files/ldap/${ssl_cert}"
+      group  => 'root',
+      mode   => '0755',
+    }
+
+    file { "${ldap::params::cacertdir}/${ssl_cert}":
+      ensure  => $ensure,
+      owner   => 'root',
+      group   => $ldap::params::group,
+      mode    => '0644',
+      source  => "puppet:///files/ldap/${ssl_cert}",
+      require => File[$ldap::params::cacertdir],
     }
 
     # Create certificate hash file
