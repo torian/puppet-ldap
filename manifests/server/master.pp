@@ -216,6 +216,7 @@ class ldap::server::master(
                     default => 'posix'
                   },
       require  => File['ssl_cert']
+      path     => [ "/bin", "/usr/bin", "/sbin", "/usr/sbin" ]
     }
 
   }

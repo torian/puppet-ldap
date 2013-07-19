@@ -267,7 +267,8 @@ class ldap::server::slave(
                     /^2.6/  => 'posix',
                     default => 'posix'
                   },
-      require  => File['ssl_cert']
+      require  => File['ssl_cert'],
+      path    => [ "/bin", "/usr/bin", "/sbin", "/usr/sbin" ]
     }
 
   }
