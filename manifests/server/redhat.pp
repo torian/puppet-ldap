@@ -8,7 +8,7 @@ class ldap::server::redhat($ssl) {
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    content => template('ldap/sysconfig/ldap.erb'),
+    content => template('ldap/etc/sysconfig/ldap.erb'),
     notify  => Service[$ldap::params::service]
   }
 

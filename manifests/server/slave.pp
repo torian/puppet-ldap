@@ -214,7 +214,7 @@ class ldap::server::slave(
 
   file { "${ldap::params::prefix}/${ldap::params::server_config}":
     ensure  => $ensure,
-    content => template("ldap/${ldap::params::server_config}.erb"),
+    content => template("ldap/${ldap::params::prefix}/${ldap::params::server_config}.erb"),
     notify  => Service[$ldap::params::service],
     require => $ssl ? {
       false => [

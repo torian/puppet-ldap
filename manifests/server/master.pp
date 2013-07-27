@@ -162,7 +162,7 @@ class ldap::server::master(
 
   file { "${ldap::params::prefix}/${ldap::params::server_config}":
     ensure  => $ensure,
-    content => template("ldap/${ldap::params::server_config}.erb"),
+    content => template("ldap/${ldap::params::prefix}/${ldap::params::server_config}.erb"),
     notify  => Service[$ldap::params::service],
     require => $ssl ? {
       false => [
@@ -215,7 +215,7 @@ class ldap::server::master(
                     /^2.6/  => 'posix',
                     default => 'posix'
                   },
-      require  => File['ssl_cert']
+      require  => File['ssl_cert'],
       path     => [ "/bin", "/usr/bin", "/sbin", "/usr/sbin" ]
     }
 

@@ -21,7 +21,7 @@ describe 'ldap::server::master' do
         :rootpw => 'asdqw',
       } }
     
-			it { should include_class('ldap::params') }
+			it { should include_class('ldap') }
 			it { should contain_service(oses[os][:service]) }
 			it { should contain_package(oses[os][:server_pkg]) }
 			it { should contain_file(oses[os][:server_cfg]) }
@@ -49,7 +49,7 @@ describe 'ldap::server::master' do
 		} }
 		it {
 			expect {
-				should include_class('ldap::params')
+				should include_class('ldap')
 			}.to raise_error(Puppet::Error, /^Operating system.*/)
 		}
 	end

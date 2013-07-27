@@ -8,7 +8,7 @@ class ldap::server::debian($ssl) {
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    content => template('ldap/default/slapd.erb'),
+    content => template('ldap/etc/default/slapd.erb'),
     notify  => Service[$ldap::params::service]
   }
 
