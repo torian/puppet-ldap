@@ -16,49 +16,45 @@ describe 'ldap' do
 				:architecture              => oses[os][:architecture],
 			} }
 
-			let(:params) { { 
-				:uri  => 'ldap://ldap.example.com',
-				:base => 'dc=suffix',
-			} }
-      
 			it { should include_class('ldap::params') }
-			it { should contain_package(oses[os][:utils_pkg]) }
-			it { should contain_file(oses[os][:utils_cfg]) }
 
-			context 'Motd disabled (default)' do
-				it { should_not contain_motd__register('ldap') }
-			end
-			context 'Motd enabled' do
-				let(:params) { {
-					:uri  => 'ldap://ldap.example.com',
-					:base => 'dc=suffix',
-					:enable_motd => true 
-				} }
-				it { should contain_motd__register('ldap') }
-			end
+      context 'Ensure is set to present' do
 
-			context 'SSL Enabled with certificate filename' do
-				let(:params) { {
-					:uri      => 'ldap://ldap.example.com',
-					:base     => 'dc=suffix',
-					:ssl      => true,
-					:ssl_cert => oses[os][:ssl_cert],
-				} }
-				it { should contain_file("#{oses[os][:cacertdir]}/#{oses[os][:ssl_cert]}") } 
-			end
+        let(:params) { { 
+          :ensure  => 'present',
+        } }
 
-			context 'SSL Enabled without certificate' do
-				let(:params) { {
-					:uri      => 'ldap://ldap.example.com',
-					:base     => 'dc=suffix',
-					:ssl      => true,
-				} }
-				it { expect {
-					should contain_file("#{oses[os][:cacertdir]}/#{oses[os][:ssl_cert]}") 
-					}.to raise_error(Puppet::Error, /^When ssl is.*/)
-				}
+			  it 'install required packages ' do
+          should contain_package(oses[os][:utils_pkg]).with({
+            'ensure' => 'present',
+          })
+        end
 
-			end
+      end
+
+      context 'Ensure is set to absent' do
+
+        let(:params) { { 
+          :ensure  => 'absent',
+        } }
+
+			  it 'do not install required packages ' do
+          should contain_package(oses[os][:utils_pkg]).with({
+            'ensure' => 'absent',
+          })
+        end
+
+      end
+
+      context 'Ensure is not set' do
+
+			  it 'install required packages ' do
+          should contain_package(oses[os][:utils_pkg]).with({
+            'ensure' => 'present',
+          })
+        end
+
+      end
 
 		end
 

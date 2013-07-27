@@ -186,7 +186,7 @@ class ldap::server::slave(
   $enable_motd    = false,
   $ensure         = 'present') {
 
-  include ldap::params
+  require ldap
 
   if($enable_motd) {
     motd::register { 'ldap::server::slave': }
