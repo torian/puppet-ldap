@@ -1,0 +1,16 @@
+dn: cn=config
+changetype: modify
+<% @cnconfig_attrs.each_pair do |key, value| -%>
+<% if value != '' and @cnconfig_default_attrs.include?(key) -%>
+replace: <%= key %>
+<%= key %>: <%= value %>
+-
+<% elsif @cnconfig_attrs.include?(key) and value == '' -%>
+delete: <%= key %>
+-
+<% else -%>
+add: <%= key %>
+<%= key %>: <%= value %>
+-
+<% end -%>
+<% end -%>

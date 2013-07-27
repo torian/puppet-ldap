@@ -65,6 +65,44 @@ class ldap::params {
         'index displayName  pres,sub,eq',
         ]
 
+      #
+      # olcTLS* attributes are not defined here
+      # because they do have their own behavior
+      # according to the puppet module parameters
+      #
+      #  olcTLSCACertificatePath = $ssl_ca
+      #  olcTLSCertificateFile = $ssl_cert
+      #  olcTLSCertificateKeyFile = $ssl_key
+      #
+      $cnconfig_default_attrs = [
+        'olcConfigFile',
+        'olcConfigDir',
+        'olcAllows',
+        'olcAttributeOptions',
+        'olcAuthzPolicty',
+        'olcConcurrency',
+        'olcConnMaxPending',
+        'olcConnMaxPendingAuth',
+        'olcGentleHUP',
+        'olcIdleTimeout',
+        'olcIndexSubstrIfMaxLen',
+        'olcIndexSubstrIfMinLen',
+        'olcIndexSubstrIfAnyLen',
+        'olcIndexSubstrIfAnyStep',
+        'olcIndexIntLen',
+        'olcLocalSSF',
+        'olcPidFile',
+        'olcReadOnly',
+        'olcReverseLookup',
+        'olcSaslSecProps',
+        'olcSockbufMaxIncoming',
+        'olcSockbufMaxIncomingAuth',
+        'olcTLSVerifyClient',
+        'olcThreads',
+        'olcToolThreads',
+        'olcWriteTimeout',
+      ]
+
     }
 
     'RedHat' : {
@@ -140,6 +178,44 @@ class ldap::params {
         'index uid          pres,sub,eq',
         'index displayName  pres,sub,eq',
         ]
+
+      #
+      # olcTLS* attributes are not defined here
+      # because they do have their own behavior
+      # according to the puppet module parameters
+      #
+      #  olcTLSCACertificatePath = $ssl_ca
+      #  olcTLSCertificateFile = $ssl_cert
+      #  olcTLSCertificateKeyFile = $ssl_key
+      #
+      $cnconfig_default_attrs = [
+        'olcConfigFile',
+        'olcConfigDir',
+        'olcAllows',
+        'olcAttributeOptions',
+        'olcAuthzPolicty',
+        'olcConcurrency',
+        'olcConnMaxPending',
+        'olcConnMaxPendingAuth',
+        'olcGentleHUP',
+        'olcIdleTimeout',
+        'olcIndexSubstrIfMaxLen',
+        'olcIndexSubstrIfMinLen',
+        'olcIndexSubstrIfAnyLen',
+        'olcIndexSubstrIfAnyStep',
+        'olcIndexIntLen',
+        'olcLocalSSF',
+        'olcPidFile',
+        'olcReadOnly',
+        'olcReverseLookup',
+        'olcSaslSecProps',
+        'olcSockbufMaxIncoming',
+        'olcSockbufMaxIncomingAuth',
+        'olcTLSVerifyClient',
+        'olcThreads',
+        'olcToolThreads',
+        'olcWriteTimeout',
+      ]
     }
 
     'Suse' : {
@@ -191,6 +267,44 @@ class ldap::params {
         'index uid          pres,sub,eq',
         'index displayName  pres,sub,eq',
         ]
+
+      #
+      # olcTLS* attributes are not defined here
+      # because they do have their own behavior
+      # according to the puppet module parameters
+      #
+      #  olcTLSCACertificatePath = $ssl_ca
+      #  olcTLSCertificateFile = $ssl_cert
+      #  olcTLSCertificateKeyFile = $ssl_key
+      #
+      $cnconfig_default_attrs = [
+        'olcConfigFile',
+        'olcConfigDir',
+        'olcAllows',
+        'olcAttributeOptions',
+        'olcAuthzPolicty',
+        'olcConcurrency',
+        'olcConnMaxPending',
+        'olcConnMaxPendingAuth',
+        'olcGentleHUP',
+        'olcIdleTimeout',
+        'olcIndexSubstrIfMaxLen',
+        'olcIndexSubstrIfMinLen',
+        'olcIndexSubstrIfAnyLen',
+        'olcIndexSubstrIfAnyStep',
+        'olcIndexIntLen',
+        'olcLocalSSF',
+        'olcPidFile',
+        'olcReadOnly',
+        'olcReverseLookup',
+        'olcSaslSecProps',
+        'olcSockbufMaxIncoming',
+        'olcSockbufMaxIncomingAuth',
+        'olcTLSVerifyClient',
+        'olcThreads',
+        'olcToolThreads',
+        'olcWriteTimeout',
+      ]
 
     }
 
