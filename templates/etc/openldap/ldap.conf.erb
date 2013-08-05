@@ -1,0 +1,58 @@
+###############################################################################
+# << FILE MANAGED BY PUPPET >>
+# Manual changes are likey to be overwritten
+###############################################################################
+
+uri  <%= @uri %>
+base <%= @base %>
+
+ldap_version   <%= @version %>
+timelimit      <%= @timelimit %>
+bind_timelimit <%= @bind_timelimit %>
+idle_timelimit <%= @idle_timelimit %>
+bind_policy    soft
+deref          never
+
+<% if @binddn != false then -%>
+binddn <%= @binddn %>
+bindpw <%= @bindpw %>
+<% end -%>
+
+<% if @nsswitch == true then -%>
+# DNs in groups
+#nss_schema         rfc2307bis
+#nss_map_attribute  uniquemember member
+#nss_map_attribute memberuid    member
+#nss_getgrent_skipmembers yes
+
+nss_base_passwd <%= @nss_passwd %>,<%= @base %>?sub
+nss_base_shadow <%= @nss_shadow %>,<%= @base %>?sub
+nss_base_group  <%= @nss_group  %>,<%= @base %>?one
+nss_initgroups_ignoreusers root daemon bin sys sync games man lp mail news uucp proxy www-data backup list irc gnats nobody libuuid statd sshd puppet
+
+<% end -%>
+
+<% if @pam == true then -%>
+pam_login_attribute  <%= @pam_att_login %>
+pam_member_attribute <%= @pam_att_member %>
+pam_password         <%= @pam_passwd %>
+pam_filter           <%= @pam_filter %>
+<% end -%>
+
+<% if @sudoers_base != false -%>
+sudoers_base          <%= @sudoers_base %>,<%= @base %>
+sudoers_search_filter <%= @sudoers_filter %>
+sudoers_timed         <%= @sudoers_timed %>
+sudoers_debug         <%= @sudoers_debug %>
+<% end -%>
+
+<% if @ssl == true then -%>
+ssl           start_tls
+tls_reqcert   never
+tls_cacertdir <%= scope.lookupvar('ldap::params::cacertdir') %>
+<% else -%>
+#ssl           start_tls
+#tls_reqcert   never
+#tls_cacertdir <%= scope.lookupvar('ldap::params::cacertdir') %>
+<% end -%>
+

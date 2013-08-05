@@ -21,7 +21,7 @@ class ldap::params {
       $server_group    = 'openldap'
       $db_prefix       = '/var/lib/ldap'
       $ssl_prefix      = '/etc/ssl/certs'
-      $server_run      = '/var/run/openldap'
+      $server_run      = '/var/run/slapd'
 
       case $::operatingsystemmajrelease {
         5 : {
