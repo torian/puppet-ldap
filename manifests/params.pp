@@ -5,7 +5,8 @@ class ldap::params {
 
     'Debian' : {
 
-      $package   = [ 'ldap-utils' ]
+      $package_deps = [ 'openssl' ]
+      $package      = [ 'ldap-utils' ]
 
       $prefix    = '/etc/ldap'
       $owner     = 'root'

@@ -11,7 +11,7 @@
 #
 #
 # == Tested/Works on:
-#   - Debian:    5.0   / 6.0   / 7.x
+#   - Debian:    5.0   / 6.0   / 7.x / 8.x
 #   - RHEL       5.x   / 6.x
 #   - CentOS     5.x   / 6.x
 #   - OpenSuse:  11.x  / 12.x
@@ -39,12 +39,17 @@
 #
 class ldap($ensure = present) {
 
-    include stdlib
-    include ldap::params
+  include stdlib
+  include ldap::params
 
-    package { $ldap::params::package :
-      ensure => $ensure,
-    }
+  # Dependencies
+  package { $ldap::params::package_deps :
+    ensure => $ensure,
+  }
+
+  package { $ldap::params::package :
+    ensure => $ensure,
+  }
 
 }
 
