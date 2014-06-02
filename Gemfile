@@ -1,6 +1,6 @@
-source :rubygems
+source 'https://rubygems.org'
 
-gem 'rake', '~> 0.8.7'
+gem 'rake', '~> 10.3'
 gem 'puppet', '~> 2.7'
-gem 'rspec-puppet', '~> 0.1.6'
+gem 'rspec-puppet', '~> 1.0.1'
 gem 'puppetlabs_spec_helper', '~> 0.4.1'
