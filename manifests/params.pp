@@ -108,7 +108,8 @@ class ldap::params {
 
     'RedHat' : {
 
-      $package   = [ 'openldap', 'openldap-clients' ]
+      $package_deps = [ 'openssl' ]
+      $package      = [ 'openldap', 'openldap-clients' ]
 
       $prefix    = '/etc/openldap'
       $owner     = 'root'
