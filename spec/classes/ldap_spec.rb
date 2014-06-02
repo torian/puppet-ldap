@@ -14,9 +14,10 @@ describe 'ldap' do
         :operatingsystem           => oses[os][:operatingsystem],
         :operatingsystemmajrelease => oses[os][:operatingsystemmajrelease],
         :architecture              => oses[os][:architecture],
+        :concat_basedir            => '/nonexistent',
       } }
 
-      it { should include_class('ldap::params') }
+      it { should contain_class('ldap::params') }
 
       context 'Ensure is set to present' do
 

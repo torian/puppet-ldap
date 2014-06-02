@@ -14,6 +14,7 @@ describe 'ldap::client' do
         :operatingsystem           => oses[os][:operatingsystem],
         :operatingsystemmajrelease => oses[os][:operatingsystemmajrelease],
         :architecture              => oses[os][:architecture],
+        :concat_basedir            => '/nonexistent',
       } }
 
       let(:params) { {
@@ -21,7 +22,7 @@ describe 'ldap::client' do
         :base => 'dc=suffix',
       } }
 
-      it { should include_class('ldap::params') }
+      it { should contain_class('ldap::params') }
       it { should contain_file(oses[os][:utils_cfg]) }
 
       context 'Motd disabled (default)' do
