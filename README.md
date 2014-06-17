@@ -143,6 +143,19 @@ TODO
    the schemas specified by *index_inc*. It just adds an include to slapd
  * Need support for extending ACLs
 
+Run Tests
+---------
+To run the tests you need bundler (```apt-get install bundler``` or see http://bundler.io/).
+
+Install needed gems with bundler:
+
+        bundler install --path=vendor
+
+Run the tests with bundler:
+
+        bundler exec rake spec
+
+
 CopyLeft
 ---------
 
