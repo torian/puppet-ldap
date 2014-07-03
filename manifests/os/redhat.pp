@@ -1,0 +1,2 @@
+
+class ldap::os::redhat {}

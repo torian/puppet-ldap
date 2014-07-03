@@ -229,6 +229,9 @@ class ldap::client(
     require => File[$ldap::params::prefix],
   }
 
+  # Configurations based on operating system release
+  include "ldap::os::${::operatingsystem}"
+
   if($ssl) {
 
     if(!$ssl_cert) {

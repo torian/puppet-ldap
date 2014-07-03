@@ -1,0 +1,3 @@
+
+class ldap::os::suse {}
+
