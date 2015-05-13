@@ -158,80 +158,79 @@
 #
 # Copyleft (C) 2012 Emiliano Castagnari ecastag@gmail.com (a.k.a. Torian)
 #
-#
-class ldap::server::slave(
-  $suffix         = undef,
-  $sync_rid       = undef,
-  $sync_provider  = undef,
-  $sync_updatedn  = undef,
-  $sync_binddn    = undef,
-  $sync_bindpw    = undef,
-  $rootpw         = undef,
-  $rootdn         = "cn=admin,${suffix}",
-  $schema_inc     = [],
-  $modules_inc    = [],
-  $index_inc      = [],
-  $log_level      = '0',
-  $bind_anon      = true,
-  $ssl            = false,
-  $ssl_ca         = false,
-  $ssl_cert       = false,
-  $ssl_key        = false,
-  $sync_type      = 'refreshOnly',
-  $sync_interval  = '00:00:10:00',
-  $sync_base      = '',
-  $sync_filter    = '(objectClass=*)',
-  $sync_attrs     = '*',
-  $sync_scope     = 'sub',
-  $enable_motd    = false,
-  $ensure         = 'present') {
-
+class ldap::server::slave (
+  $suffix        = undef,
+  $sync_rid      = undef,
+  $sync_provider = undef,
+  $sync_updatedn = undef,
+  $sync_binddn   = undef,
+  $sync_bindpw   = undef,
+  $rootpw        = undef,
+  $rootdn        = "cn=admin,${suffix}",
+  $schema_inc    = [],
+  $modules_inc   = [],
+  $index_inc     = [],
+  $log_level     = '0',
+  $bind_anon     = true,
+  $ssl           = false,
+  $ssl_ca        = false,
+  $ssl_cert      = false,
+  $ssl_key       = false,
+  $sync_type     = 'refreshOnly',
+  $sync_interval = '00:00:10:00',
+  $sync_base     = '',
+  $sync_filter   = '(objectClass=*)',
+  $sync_attrs    = '*',
+  $sync_scope    = 'sub',
+  $enable_motd   = false,
+  $ensure        = 'present') {
   include ldap::params
 
   if ($suffix == undef) {
     fail('${ldap::server::slave::suffix} must be set.')
   }
+
   if ($rootpw == undef) {
     fail('${ldap::server::slave::rootpw} must be given.')
   }
+
   if ($sync_rid == undef) {
     fail('${ldap::server::slave::sync_rid} must be given.')
   }
+
   if ($sync_provider == undef) {
     fail('${ldap::server::slave::sync_provider} must be given.')
   }
+
   if ($sync_updatedn == undef) {
     fail('${ldap::server::slave::sync_updatedn} must be given.')
   }
+
   if ($sync_binddn == undef) {
     fail('${ldap::server::slave::sync_binddn} must be given.')
   }
+
   if ($sync_provider == undef) {
     fail('${ldap::server::slave::sync_bindpw} must be given.')
   }
-  
-  if($enable_motd) {
+
+  if ($enable_motd) {
     motd::register { 'ldap::server::slave': }
   }
 
-  package { $ldap::params::server_package:
-    ensure => $ensure
-  }
+  package { $ldap::params::server_package: ensure => $ensure }
 
   service { $ldap::params::service:
-    ensure     => running,
-    enable     => true,
-    pattern    => $ldap::params::server_pattern,
-    require    => [
-      Package[$ldap::params::server_package],
-      File["${ldap::params::prefix}/${ldap::params::server_config}"],
-      ]
+    ensure  => running,
+    enable  => true,
+    pattern => $ldap::params::server_pattern,
+    require => [Package[$ldap::params::server_package], File["${ldap::params::prefix}/${ldap::params::server_config}"],]
   }
 
   File {
-    mode    => '0640',
-    owner   => $ldap::params::server_owner,
-    group   => $ldap::params::server_group,
+    mode  => '0640',
+    owner => $ldap::params::server_owner,
+    group => $ldap::params::server_group,
   }
 
   file { "${ldap::params::prefix}/${ldap::params::server_config}":
@@ -239,44 +238,45 @@ class ldap::server::slave(
     content => template("ldap/${ldap::params::server_config}.erb"),
     notify  => Service[$ldap::params::service],
     require => $ssl ? {
-      false => [
-        Package[$ldap::params::server_package],
-        ],
-      true  => [
-        Package[$ldap::params::server_package],
-        File['ssl_ca'],
-        File['ssl_cert'],
-        File['ssl_key'],
-        ]
-      }
+      false => [Package[$ldap::params::server_package],],
+      true  => [Package[$ldap::params::server_package], File['ssl_ca'], File['ssl_cert'], File['ssl_key'],]
+    }
   }
 
   $msg_prefix = 'SSL enabled. You must specify'
   $msg_suffix = '(filename). It should be located at puppet:///files/ldap'
 
-  if($ssl) {
+  if ($ssl) {
+    if (!$ssl_ca) {
+      fail("${msg_prefix} ssl_ca ${msg_suffix}")
+    }
 
-    if(!$ssl_ca) { fail("${msg_prefix} ssl_ca ${msg_suffix}") }
     file { 'ssl_ca':
-      ensure  => present,
-      source  => "puppet:///files/ldap/${ssl_ca}",
-      path    => "${ldap::params::ssl_prefix}/${ssl_ca}",
-      mode    => '0644',
+      ensure => present,
+      source => "puppet:///files/ldap/${ssl_ca}",
+      path   => "${ldap::params::ssl_prefix}/${ssl_ca}",
+      mode   => '0644',
     }
 
-    if(!$ssl_cert) { fail("${msg_prefix} ssl_cert ${msg_suffix}") }
+    if (!$ssl_cert) {
+      fail("${msg_prefix} ssl_cert ${msg_suffix}")
+    }
+
     file { 'ssl_cert':
-      ensure  => present,
-      source  => "puppet:///files/ldap/${ssl_cert}",
-      path    => "${ldap::params::ssl_prefix}/${ssl_cert}",
-      mode    => '0644',
+      ensure => present,
+      source => "puppet:///files/ldap/${ssl_cert}",
+      path   => "${ldap::params::ssl_prefix}/${ssl_cert}",
+      mode   => '0644',
     }
 
-    if(!$ssl_key) { fail("${msg_prefix} ssl_key ${msg_suffix}") }
+    if (!$ssl_key) {
+      fail("${msg_prefix} ssl_key ${msg_suffix}")
+    }
+
     file { 'ssl_key':
-      ensure  => present,
-      source  => "puppet:///files/ldap/${ssl_key}",
-      path    => "${ldap::params::ssl_prefix}/${ssl_key}",
+      ensure => present,
+      source => "puppet:///files/ldap/${ssl_key}",
+      path   => "${ldap::params::ssl_prefix}/${ssl_key}",
     }
 
     # Create certificate hash file
@@ -284,11 +284,11 @@ class ldap::server::slave(
       command  => "ln -s ${ldap::params::ssl_prefix}/${ssl_cert} ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::ssl_prefix}/${ssl_cert}).0",
       unless   => "test -f ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::ssl_prefix}/${ssl_cert}).0",
       provider => $::puppetversion ? {
-                    /^3./   => 'shell',
-                    /^2.7/  => 'shell',
-                    /^2.6/  => 'posix',
-                    default => 'posix'
-                  },
+        /^3./   => 'shell',
+        /^2.7/  => 'shell',
+        /^2.6/  => 'posix',
+        default => 'posix'
+      },
       require  => File['ssl_cert']
     }
 
@@ -296,7 +296,6 @@ class ldap::server::slave(
 
   # Additional configurations (for rc scripts)
   case $::osfamily {
-    
     'Debian' : {
       class { 'ldap::server::debian': ssl => $ssl }
     }
@@ -305,10 +304,9 @@ class ldap::server::slave(
       class { 'ldap::server::redhat': ssl => $ssl }
     }
 
-    #'Suse' : {
+    # 'Suse' : {
     #  class { 'ldap::server::suse':   ssl => $ssl }
     #}
-
   }
 
 }

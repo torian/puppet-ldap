@@ -1,8 +1,8 @@
 
-class ldap::server::debian($ssl=undef) {
-
+class ldap::server::debian ($ssl = undef) {
   include ldap::params
-  if($ssl == undef){
+
+  if ($ssl == undef) {
     fail('${ldap::server::debian::ssl} must be set.')
   }
 

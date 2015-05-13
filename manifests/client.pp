@@ -132,14 +132,14 @@
 # class { 'ldap':
 #  uri  => 'ldap://ldapserver00 ldap://ldapserver01',
 #  base => 'dc=suffix',
-# }
+#}
 #
 # class { 'ldap':
 #  uri  => 'ldap://ldapserver00',
 #  base => 'dc=suffix',
 #  ssl  => true,
 #  ssl_cert => 'ldapserver00.pem'
-# }
+#}
 #
 # class { 'ldap':
 #  uri        => 'ldap://ldapserver00',
@@ -153,7 +153,7 @@
 #  nss_group  => 'ou=groups',
 #
 #  pam        => true,
-# }
+#}
 #
 #
 # === Authors
@@ -165,8 +165,7 @@
 #
 # Copyleft (C) 2012 Emiliano Castagnari ecastag@gmail.com (a.k.a. Torian)
 #
-#
-class ldap::client(
+class ldap::client (
   $uri            = undef,
   $base           = undef,
   $version        = '3',
@@ -177,57 +176,56 @@ class ldap::client(
   $bindpw         = false,
   $ssl            = false,
   $ssl_cert       = false,
-
-  $nsswitch   = false,
-  $nss_passwd = false,
-  $nss_group  = false,
-  $nss_shadow = false,
-
+  $nsswitch       = false,
+  $nss_passwd     = false,
+  $nss_group      = false,
+  $nss_shadow     = false,
   $pam            = false,
   $pam_att_login  = 'uid',
   $pam_att_member = 'member',
   $pam_passwd     = 'md5',
   $pam_filter     = 'objectClass=posixAccount',
-
   $sudoers_base   = false,
   $sudoers_filter = false,
   $sudoers_timed  = false,
   $sudoers_debug  = 0,
-
   $enable_motd    = false,
   $ensure         = present) {
-
   require ldap
+
   if ($uri == undef) {
     fail('${ldap::client::uri} must be set.')
   }
+
   if ($base == undef) {
     fail('${ldap::client::base} must be given.')
   }
+
   if ($enable_motd) {
     motd::register { 'ldap': }
   }
-  if($enable_motd) {
+
+  if ($enable_motd) {
     motd::register { 'ldap': }
   }
 
   File {
-    ensure  => $ensure,
-    mode    => '0644',
-    owner   => $ldap::params::owner,
-    group   => $ldap::params::group,
+    ensure => $ensure,
+    mode   => '0644',
+    owner  => $ldap::params::owner,
+    group  => $ldap::params::group,
   }
 
   file { $ldap::params::prefix:
     ensure  => $ensure ? {
-                  present => directory,
-                  default => absent,
-                },
+      present => directory,
+      default => absent,
+    },
     require => Package[$ldap::params::package],
   }
 
-  if($sudoers_base) {
-    if(! $sudoers_filter) {
+  if ($sudoers_base) {
+    if (!$sudoers_filter) {
       fail('If sudoers_base attribute is set, you must define sudoers_filter')
     }
   }
@@ -240,17 +238,16 @@ class ldap::client(
   # Configurations based on operating system release
   include "ldap::os::${::operatingsystem}"
 
-  if($ssl) {
-
-    if(!$ssl_cert) {
+  if ($ssl) {
+    if (!$ssl_cert) {
       fail('When ssl is enabled you must define ssl_cert (filename)')
     }
 
     file { $ldap::params::cacertdir:
       ensure => $ensure ? {
-                  present => directory,
-                  default => absent
-                },
+        present => directory,
+        default => absent
+      },
       owner  => 'root',
       group  => 'root',
       mode   => '0755',
@@ -270,25 +267,25 @@ class ldap::client(
       command => "ln -s ${ldap::params::cacertdir}/${ssl_cert} ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::cacertdir}/${ssl_cert}).0",
       unless  => "test -f ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::cacertdir}/${ssl_cert}).0",
       require => File["${ldap::params::cacertdir}/${ssl_cert}"],
-      path    => [ "/bin", "/usr/bin", "/sbin", "/usr/sbin" ]
+      path    => ["/bin", "/usr/bin", "/sbin", "/usr/sbin"]
     }
   }
 
   # require module nsswitch
-  if($nsswitch == true) {
+  if ($nsswitch == true) {
     class { 'nsswitch':
       uri         => $uri,
       base        => $base,
       module_type => $ensure ? {
-                        'present' => 'ldap',
-                        default   => 'none'
-                      },
+        'present' => 'ldap',
+        default   => 'none'
+      },
     }
   }
 
   # require module pam
-  if($pam == true) {
-    Class ['pam::pamd'] -> Class['ldap']
+  if ($pam == true) {
+    Class['pam::pamd'] -> Class['ldap']
   }
 
 }

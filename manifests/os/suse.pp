@@ -1,3 +1,3 @@
 
-class ldap::os::suse {}
-
+class ldap::os::suse {
+}

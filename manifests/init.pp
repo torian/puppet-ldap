@@ -170,10 +170,11 @@ class ldap (
   if ($uri == undef) {
     fail('${ldap::uri} must be set.')
   }
+
   if ($base == undef) {
     fail('${ldap::base} must be given.')
   }
-  
+
   if ($enable_motd) {
     motd::register { 'ldap': }
   }
@@ -229,14 +230,13 @@ class ldap (
 
   # require module nsswitch
   class { 'nsswitch':
-      uri         => $uri,
-      base        => $base,
-      module_type => $nsswitch ? {
-        true => 'ldap',
-        default   => ''
-      },
-    }
-
+    uri         => $uri,
+    base        => $base,
+    module_type => $nsswitch ? {
+      true    => 'ldap',
+      default => ''
+    },
+  }
 
   # require module pam
   if ($pam == true) {
