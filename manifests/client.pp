@@ -167,8 +167,8 @@
 #
 #
 class ldap::client(
-  $uri,
-  $base,
+  $uri            = undef,
+  $base           = undef,
   $version        = '3',
   $timelimit      = 30,
   $bind_timelimit = 30,
@@ -198,7 +198,15 @@ class ldap::client(
   $ensure         = present) {
 
   require ldap
-
+  if ($uri == undef) {
+    fail('${ldap::client::uri} must be set.')
+  }
+  if ($base == undef) {
+    fail('${ldap::client::base} must be given.')
+  }
+  if ($enable_motd) {
+    motd::register { 'ldap': }
+  }
   if($enable_motd) {
     motd::register { 'ldap': }
   }

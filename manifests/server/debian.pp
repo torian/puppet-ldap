@@ -1,7 +1,10 @@
 
-class ldap::server::debian($ssl) {
+class ldap::server::debian($ssl=undef) {
 
   include ldap::params
+  if($ssl == undef){
+    fail('${ldap::server::debian::ssl} must be set.')
+  }
 
   file { '/etc/default/slapd':
     ensure  => present,

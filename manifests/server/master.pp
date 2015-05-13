@@ -115,8 +115,8 @@
 #
 #
 class ldap::server::master(
-  $suffix,
-  $rootpw,
+  $suffix              = undef,
+  $rootpw              = undef,
   $rootdn              = "cn=admin,${suffix}",
   $schema_inc          = [],
   $modules_inc         = [],
@@ -135,6 +135,15 @@ class ldap::server::master(
   $ensure              = present) {
 
   include ldap::params
+  if ($suffix == undef) {
+    fail('${ldap::server::master::suffix} must be set.')
+  }
+  if ($rootpw == undef) {
+    fail('${ldap::server::master::rootpw} must be given.')
+  }
+  if ($enable_motd) {
+    motd::register { 'ldap': }
+  }
 
   if($enable_motd) {
     motd::register { 'ldap::server::master': }

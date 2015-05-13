@@ -143,8 +143,8 @@
 # Copyleft (C) 2012 Emiliano Castagnari ecastag@gmail.com (a.k.a. Torian)
 #
 class ldap (
-  $uri,
-  $base,
+  $uri            = undef,
+  $base           = undef,
   $version        = '3',
   $timelimit      = 30,
   $bind_timelimit = 30,
@@ -167,6 +167,13 @@ class ldap (
   $ensure         = present) {
   include ldap::params
 
+  if ($uri == undef) {
+    fail('${ldap::uri} must be set.')
+  }
+  if ($base == undef) {
+    fail('${ldap::base} must be given.')
+  }
+  
   if ($enable_motd) {
     motd::register { 'ldap': }
   }
@@ -197,9 +204,11 @@ class ldap (
     if (!$ssl_cert and !$ssl_cacert) {
       fail('When ssl is enabled you must define ssl_cert (filename) or ssl_cert (abspath)')
     }
+
     if ($ssl_cert and $ssl_cacert) {
       fail('You defined both ssl_cert (filename) and ssl_cert (abspath). Please use only one.')
     }
+
     if ($ssl_cert) {
       file { "${ldap::params::cacertdir}/${ssl_cert}":
         ensure => $ensure,

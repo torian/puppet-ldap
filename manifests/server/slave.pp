@@ -160,13 +160,13 @@
 #
 #
 class ldap::server::slave(
-  $suffix,
-  $sync_rid,
-  $sync_provider,
-  $sync_updatedn,
-  $sync_binddn,
-  $sync_bindpw,
-  $rootpw,
+  $suffix         = undef,
+  $sync_rid       = undef,
+  $sync_provider  = undef,
+  $sync_updatedn  = undef,
+  $sync_binddn    = undef,
+  $sync_bindpw    = undef,
+  $rootpw         = undef,
   $rootdn         = "cn=admin,${suffix}",
   $schema_inc     = [],
   $modules_inc    = [],
@@ -188,6 +188,28 @@ class ldap::server::slave(
 
   include ldap::params
 
+  if ($suffix == undef) {
+    fail('${ldap::server::slave::suffix} must be set.')
+  }
+  if ($rootpw == undef) {
+    fail('${ldap::server::slave::rootpw} must be given.')
+  }
+  if ($sync_rid == undef) {
+    fail('${ldap::server::slave::sync_rid} must be given.')
+  }
+  if ($sync_provider == undef) {
+    fail('${ldap::server::slave::sync_provider} must be given.')
+  }
+  if ($sync_updatedn == undef) {
+    fail('${ldap::server::slave::sync_updatedn} must be given.')
+  }
+  if ($sync_binddn == undef) {
+    fail('${ldap::server::slave::sync_binddn} must be given.')
+  }
+  if ($sync_provider == undef) {
+    fail('${ldap::server::slave::sync_bindpw} must be given.')
+  }
+  
   if($enable_motd) {
     motd::register { 'ldap::server::slave': }
   }

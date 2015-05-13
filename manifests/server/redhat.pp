@@ -1,8 +1,10 @@
 
-class ldap::server::redhat($ssl) {
+class ldap::server::redhat($ssl=undef) {
 
   include ldap::params
-
+  if($ssl == undef){
+    fail('${ldap::server::redhat::ssl} must be set.')
+  }
   file { '/etc/sysconfig/ldap':
     ensure  => present,
     owner   => 'root',
