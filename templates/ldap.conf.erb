@@ -18,7 +18,7 @@ binddn <%= @binddn %>
 bindpw <%= @bindpw %>
 <% end -%>
 
-<% if @nsswitch == true then -%>
+<% if @nsswitch != false then -%>
 # DNs in groups
 nss_schema         rfc2307bis
 nss_map_attribute  uniquemember member

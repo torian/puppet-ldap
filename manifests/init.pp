@@ -229,14 +229,14 @@ class ldap (
   }
 
   # require module nsswitch
-  class { 'nsswitch':
-    uri         => $uri,
-    base        => $base,
-    module_type => $nsswitch ? {
-      true    => 'ldap',
-      default => ''
-    },
-  }
+    class { 'nsswitch':
+      uri         => $uri,
+      base        => $base,
+      module_type => $nsswitch ? {
+        false    => '',
+        default => $nsswitch
+      },
+    }
 
   # require module pam
   if ($pam == true) {
