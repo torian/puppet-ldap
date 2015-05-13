@@ -14,7 +14,7 @@ Puppet module to manage client and server configuration for
 Ldap client configuration at its simplest:
 
 
-    class { 'ldap::client':
+    class { 'ldap':
     	uri  => 'ldap://ldapserver00 ldap://ldapserver01',
     	base => 'dc=foo,dc=bar'
     }
@@ -25,7 +25,7 @@ Enable TLS/SSL:
 Note that *ssl_cert* should be the CA's certificate file, and
 it should be located under *puppet:///files/ldap/*.
 
-    class { 'ldap::client':
+    class { 'ldap':
     	uri      => 'ldap://ldapserver00 ldap://ldapserver01',
     	base     => 'dc=foo,dc=bar',
     	ssl      => true,
@@ -34,7 +34,7 @@ it should be located under *puppet:///files/ldap/*.
 
 Enable nsswitch and pam configuration (requires both modules):
 
-    class { 'ldap::client':
+    class { 'ldap':
       uri      => 'ldap://ldapserver00 ldap://ldapserver01',
       base     => 'dc=foo,dc=bar',
       ssl      => true

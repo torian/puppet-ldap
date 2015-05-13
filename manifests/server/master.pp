@@ -30,11 +30,6 @@
 #
 #    *Optional* (defaults to [])
 #
-#  [cnconfig_attrs]
-#    Default cn=config attributes that needs to be changed
-#    upon runs
-#    *Optional* (defaults to {})
-#
 #  [log_level]
 #
 #    *Optional* (defaults to 0)
@@ -126,7 +121,6 @@ class ldap::server::master(
   $schema_inc          = [],
   $modules_inc         = [],
   $index_inc           = [],
-  $cnconfig_attrs      = {},
   $log_level           = '0',
   $bind_anon           = true,
   $ssl                 = false,
@@ -140,7 +134,7 @@ class ldap::server::master(
   $enable_motd         = false,
   $ensure              = present) {
 
-  require ldap
+  include ldap::params
 
   if($enable_motd) {
     motd::register { 'ldap::server::master': }
@@ -160,22 +154,6 @@ class ldap::server::master(
       ]
   }
 
-  if (!empty($cnconfig_attrs)) {
-
-    $cnconfig_default_attrs = $ldap::params::cnconfig_default_attrs
-
-    file {"${ldap::params::prefix}/slapd.d/cn=config-update.ldif":
-      ensure  => present,
-      content => template("ldap/${ldap::params::prefix}/slapd.d/cn=config-update.ldif.erb"),
-      require => Service[$ldap::params::service],
-    }
-
-    exec{"/usr/bin/ldapmodify -Y EXTERNAL -H ldapi:/// -f ${ldap::params::prefix}/slapd.d/cn=config-update.ldif && rm -f ${ldap::params::prefix}/slapd.d/cn=config-update.ldif":
-      require => File["${ldap::params::prefix}/slapd.d/cn=config-update.ldif"],
-    }
-
-  }
-
   File {
     mode    => '0640',
     owner   => $ldap::params::server_owner,
@@ -184,7 +162,7 @@ class ldap::server::master(
 
   file { "${ldap::params::prefix}/${ldap::params::server_config}":
     ensure  => $ensure,
-    content => template("ldap/${ldap::params::prefix}/${ldap::params::server_config}.erb"),
+    content => template("ldap/${ldap::params::server_config}.erb"),
     notify  => Service[$ldap::params::service],
     require => $ssl ? {
       false => [
@@ -237,8 +215,7 @@ class ldap::server::master(
                     /^2.6/  => 'posix',
                     default => 'posix'
                   },
-      require  => File['ssl_cert'],
-      path     => [ "/bin", "/usr/bin", "/sbin", "/usr/sbin" ]
+      require  => File['ssl_cert']
     }
 
   }

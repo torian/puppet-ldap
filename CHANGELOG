@@ -1,9 +1,3 @@
-2013-07-18 - Version 0.2.5
- * @akesterson commit: Added support for managing sudoers via ldap
- * Improved support for sudoers ($sudoers_base, $sudoers_filter, $sudoers_timed, $sudoers_debug)
- * Bugfix #14: When trying to use an SSL cert, Exec[Build cert hash] fails ...
- * Added path to Exec[Server certificate hash] on ldap::server::(master,slave)
-
 2013-07-11 - Version 0.2.4
  * Fixed misplaced fail() on ldap::server::slave
 
