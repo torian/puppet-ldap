@@ -97,7 +97,7 @@ Configure an OpenLdap slave:
       suffix        => 'dc=foo,dc=bar',
       rootpw        => '{SHA}iEPX+SQWIR3p67lj/0zigSWTKHg=',
       sync_rid      => '1234',
-      sync_provider => 'ldap://ldapmaster'
+      sync_provider => 'ldap://ldapmaster',
       sync_updatedn => 'cn=admin,dc=foo,dc=bar',
       sync_binddn   => 'cn=sync,dc=foo,dc=bar',
       sync_bindpw   => 'super_secret',
