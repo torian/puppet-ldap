@@ -30,11 +30,6 @@
 #
 #    *Optional* (defaults to [])
 #
-#  [cnconfig_attrs]
-#    Default cn=config attributes that needs to be changed
-#    upon runs
-#    *Optional* (defaults to {})
-#
 #  [log_level]
 #
 #    *Optional* (defaults to 0)
@@ -118,15 +113,13 @@
 #
 # Copyleft (C) 2012 Emiliano Castagnari ecastag@gmail.com (a.k.a. Torian)
 #
-#
-class ldap::server::master(
-  $suffix,
-  $rootpw,
+class ldap::server::master (
+  $suffix              = undef,
+  $rootpw              = undef,
   $rootdn              = "cn=admin,${suffix}",
   $schema_inc          = [],
   $modules_inc         = [],
   $index_inc           = [],
-  $cnconfig_attrs      = {},
   $log_level           = '0',
   $bind_anon           = true,
   $ssl                 = false,
@@ -139,92 +132,83 @@ class ldap::server::master(
   $sync_binddn         = false,
   $enable_motd         = false,
   $ensure              = present) {
+  include ldap::params
 
-  require ldap
+  if ($suffix == undef) {
+    fail('${ldap::server::master::suffix} must be set.')
+  }
 
-  if($enable_motd) {
+  if ($rootpw == undef) {
+    fail('${ldap::server::master::rootpw} must be given.')
+  }
+
+  if ($enable_motd) {
+    motd::register { 'ldap': }
+  }
+
+  if ($enable_motd) {
     motd::register { 'ldap::server::master': }
   }
 
-  package { $ldap::params::server_package:
-    ensure => $ensure
-  }
+  package { $ldap::params::server_package: ensure => $ensure }
 
   service { $ldap::params::service:
-    ensure     => running,
-    enable     => true,
-    pattern    => $ldap::params::server_pattern,
-    require    => [
-      Package[$ldap::params::server_package],
-      File["${ldap::params::prefix}/${ldap::params::server_config}"],
-      ]
-  }
-
-  if (!empty($cnconfig_attrs)) {
-
-    $cnconfig_default_attrs = $ldap::params::cnconfig_default_attrs
-
-    file {"${ldap::params::prefix}/slapd.d/cn=config-update.ldif":
-      ensure  => present,
-      content => template("ldap/${ldap::params::prefix}/slapd.d/cn=config-update.ldif.erb"),
-      require => Service[$ldap::params::service],
-    }
-
-    exec{"/usr/bin/ldapmodify -Y EXTERNAL -H ldapi:/// -f ${ldap::params::prefix}/slapd.d/cn=config-update.ldif && rm -f ${ldap::params::prefix}/slapd.d/cn=config-update.ldif":
-      require => File["${ldap::params::prefix}/slapd.d/cn=config-update.ldif"],
-    }
-
+    ensure  => running,
+    enable  => true,
+    pattern => $ldap::params::server_pattern,
+    require => [Package[$ldap::params::server_package], File["${ldap::params::prefix}/${ldap::params::server_config}"],]
   }
 
   File {
-    mode    => '0640',
-    owner   => $ldap::params::server_owner,
-    group   => $ldap::params::server_group,
+    mode  => '0640',
+    owner => $ldap::params::server_owner,
+    group => $ldap::params::server_group,
   }
 
   file { "${ldap::params::prefix}/${ldap::params::server_config}":
     ensure  => $ensure,
-    content => template("ldap/${ldap::params::prefix}/${ldap::params::server_config}.erb"),
+    content => template("ldap/${ldap::params::server_config}.erb"),
     notify  => Service[$ldap::params::service],
     require => $ssl ? {
-      false => [
-        Package[$ldap::params::server_package],
-        ],
-      true  => [
-        Package[$ldap::params::server_package],
-        File['ssl_ca'],
-        File['ssl_cert'],
-        File['ssl_key'],
-        ]
-      }
+      false => [Package[$ldap::params::server_package],],
+      true  => [Package[$ldap::params::server_package], File['ssl_ca'], File['ssl_cert'], File['ssl_key'],]
+    }
   }
 
   $msg_prefix = 'SSL enabled. You must specify'
   $msg_suffix = '(filename). It should be located at puppet:///files/ldap'
 
-  if($ssl) {
+  if ($ssl) {
+    if (!$ssl_ca) {
+      fail("${msg_prefix} ssl_ca ${msg_suffix}")
+    }
 
-    if(!$ssl_ca) { fail("${msg_prefix} ssl_ca ${msg_suffix}") }
     file { 'ssl_ca':
-      ensure  => present,
-      source  => "puppet:///files/ldap/${ssl_ca}",
-      path    => "${ldap::params::ssl_prefix}/${ssl_ca}",
-      mode    => '0644',
+      ensure => present,
+      source => "puppet:///files/ldap/${ssl_ca}",
+      path   => "${ldap::params::ssl_prefix}/${ssl_ca}",
+      mode   => '0644',
     }
 
-    if(!$ssl_cert) { fail("${msg_prefix} ssl_cert ${msg_suffix}") }
+    if (!$ssl_cert) {
+      fail("${msg_prefix} ssl_cert ${msg_suffix}")
+    }
+
     file { 'ssl_cert':
-      ensure  => present,
-      source  => "puppet:///files/ldap/${ssl_cert}",
-      path    => "${ldap::params::ssl_prefix}/${ssl_cert}",
-      mode    => '0644',
+      ensure => present,
+      source => "puppet:///files/ldap/${ssl_cert}",
+      path   => "${ldap::params::ssl_prefix}/${ssl_cert}",
+      mode   => '0644',
     }
 
-    if(!$ssl_key) { fail("${msg_prefix} ssl_key ${msg_suffix}") }
+    if (!$ssl_key) {
+      fail("${msg_prefix} ssl_key ${msg_suffix}")
+    }
+
     file { 'ssl_key':
-      ensure  => present,
-      source  => "puppet:///files/ldap/${ssl_key}",
-      path    => "${ldap::params::ssl_prefix}/${ssl_key}",
+      ensure => present,
+      source => "puppet:///files/ldap/${ssl_key}",
+      path   => "${ldap::params::ssl_prefix}/${ssl_key}",
     }
 
     # Create certificate hash file
@@ -232,20 +216,18 @@ class ldap::server::master(
       command  => "ln -s ${ldap::params::ssl_prefix}/${ssl_cert} ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::ssl_prefix}/${ssl_cert}).0",
       unless   => "test -f ${ldap::params::cacertdir}/$(openssl x509 -noout -hash -in ${ldap::params::ssl_prefix}/${ssl_cert}).0",
       provider => $::puppetversion ? {
-                    /^3./   => 'shell',
-                    /^2.7/  => 'shell',
-                    /^2.6/  => 'posix',
-                    default => 'posix'
-                  },
-      require  => File['ssl_cert'],
-      path     => [ "/bin", "/usr/bin", "/sbin", "/usr/sbin" ]
+        /^3./   => 'shell',
+        /^2.7/  => 'shell',
+        /^2.6/  => 'posix',
+        default => 'posix'
+      },
+      require  => File['ssl_cert']
     }
 
   }
 
   # Additional configurations (for rc scripts)
   case $::osfamily {
-    
     'Debian' : {
       class { 'ldap::server::debian': ssl => $ssl }
     }
@@ -254,10 +236,9 @@ class ldap::server::master(
       class { 'ldap::server::redhat': ssl => $ssl }
     }
 
-    #'Suse' : {
+    # 'Suse' : {
     #  class { 'ldap::server::suse':   ssl => $ssl }
     #}
-
   }
 
 }

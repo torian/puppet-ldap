@@ -1,2 +1,3 @@
 
-class ldap::os::debian {}
+class ldap::os::debian {
+}
