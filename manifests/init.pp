@@ -227,7 +227,8 @@ class ldap (
       }
     }
   }
-
+  
+  if ($nsswitch) {
   # require module nsswitch
     class { 'nsswitch':
       uri         => $uri,
@@ -237,7 +238,8 @@ class ldap (
         default => $nsswitch
       },
     }
-
+  }
+  
   # require module pam
   if ($pam == true) {
     Class['pam::pamd'] -> Class['ldap']
